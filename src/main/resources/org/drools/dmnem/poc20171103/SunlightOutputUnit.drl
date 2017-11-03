@@ -1,0 +1,27 @@
+/*
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+
+package org.drools.dmnem.poc20171103;
+unit SunlightOutputUnit;
+
+import java.time.LocalDateTime;
+
+rule "SunlightOutputUnit_1"
+when
+	$output1 : String() from sunlightOutput1
+then
+	System.out.println("I take care of transforming in the outputs of the DT for finalizing the decision represented by this DT.");
+	sunlight.insert( $output1 );
+end

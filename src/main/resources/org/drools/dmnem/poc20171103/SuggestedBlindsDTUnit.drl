@@ -1,0 +1,54 @@
+/*
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+
+package org.drools.dmnem.poc20171103;
+unit SuggestedBlindsDTUnit;
+
+import java.time.LocalDateTime;
+
+rule "SuggestedBlindsDTUnit-1"
+when
+	Boolean( this == false) from suggestedBlindsInput1
+	// - as per don't care about input2
+then
+	System.out.println("SuggestedBlinds ROW 1");
+	suggestedBlindsOutput1.insert( "CLOSED" );
+end
+
+rule "SuggestedBlindsDTUnit-2"
+when
+	Boolean( this == true) from suggestedBlindsInput1
+	String ( this == "sunlight" ) from suggestedBlindsInput2
+then
+	System.out.println("SuggestedBlinds ROW 2");
+	suggestedBlindsOutput1.insert( "OPEN" );
+end
+
+rule "SuggestedBlindsDTUnit-3"
+when
+	Boolean( this == true) from suggestedBlindsInput1
+	String ( this == "night time" ) from suggestedBlindsInput2
+then
+	System.out.println("SuggestedBlinds ROW 3");
+	suggestedBlindsOutput1.insert( "CLOSED" );
+end
+
+rule "SuggestedBlindsDTUnit-guard"
+when
+	String() from suggestedBlindsOutput1
+then
+	System.out.println("I have all the outputs required to finalize evaluattion of the DT");
+	drools.guard(SuggestedBlindsOutputUnit.class);
+end

@@ -1,0 +1,48 @@
+/*
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
+
+package org.drools.dmnem.poc20171103;
+unit MainDRDUnit;
+
+import java.time.LocalDateTime;
+
+rule "guard sunlight decision"
+when
+	LocalDateTime() from now
+	not( String() from sunlight )
+then
+	System.out.println("okay enabling sunlight guard");
+	drools.guard(SunlightInputUnit.class);
+end
+
+rule "guard suggestedLight decision"
+when
+	String() from sunlight
+	Boolean() from isPresent
+	not( String() from suggestedLight )
+then
+	System.out.println("okay enabling suggestedLight guard");
+	drools.guard(SuggestedLightInputUnit.class);
+end
+
+rule "guard suggestedBlinds decision"
+when
+	String() from sunlight
+	Boolean() from isPresent
+	not( String() from suggestedBlinds )
+then
+	System.out.println("okay enabling suggestedBlinds guard");
+	drools.guard(SuggestedBlindsInputUnit.class);
+end
