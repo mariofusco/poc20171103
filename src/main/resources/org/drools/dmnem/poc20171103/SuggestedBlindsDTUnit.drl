@@ -44,11 +44,3 @@ then
 	System.out.println("SuggestedBlinds ROW 3");
 	suggestedBlindsOutput1.insert( "CLOSED" );
 end
-
-rule "SuggestedBlindsDTUnit-guard"
-when
-	String() from suggestedBlindsOutput1
-then
-	System.out.println("I have all the outputs required to finalize evaluattion of the DT");
-	drools.guard(SuggestedBlindsOutputUnit.class);
-end

@@ -24,7 +24,7 @@ when
 	not( String() from sunlight )
 then
 	System.out.println("okay enabling sunlight guard");
-	drools.guard(SunlightInputUnit.class);
+	drools.guard(SunlightDTUnit.class);
 end
 
 rule "guard suggestedLight decision"
@@ -34,7 +34,7 @@ when
 	not( String() from suggestedLight )
 then
 	System.out.println("okay enabling suggestedLight guard");
-	drools.guard(SuggestedLightInputUnit.class);
+	drools.guard(SuggestedLightDTUnit.class);
 end
 
 rule "guard suggestedBlinds decision"
@@ -44,5 +44,5 @@ when
 	not( String() from suggestedBlinds )
 then
 	System.out.println("okay enabling suggestedBlinds guard");
-	drools.guard(SuggestedBlindsInputUnit.class);
+	drools.guard(SuggestedBlindsDTUnit.class);
 end

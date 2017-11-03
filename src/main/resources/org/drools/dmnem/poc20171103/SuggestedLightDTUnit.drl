@@ -45,10 +45,3 @@ then
 	suggestedLightOutput1.insert( "ON" );
 end
 
-rule "SuggestedLightDTUnit-guard"
-when
-	String() from suggestedLightOutput1
-then
-	System.out.println("I have all the outputs required to finalize evaluattion of the DT");
-	drools.guard(SuggestedLightOutputUnit.class);
-end

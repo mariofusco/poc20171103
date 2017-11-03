@@ -41,11 +41,3 @@ then
 	System.out.println("sunlight ROW 3");
 	sunlightOutput1.insert( "night time" );
 end
-
-rule "SunlightInputUnit_FINAL"
-when
-	String() from sunlightOutput1
-then
-	System.out.println("I have all the outputs required to finalize evaluattion of the DT");
-	drools.guard(SunlightOutputUnit.class);
-end

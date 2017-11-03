@@ -81,6 +81,8 @@ public class RuleTest {
      * datasource even for 1 singleton (cannot be a variable ~~ global )
      * need to instantiate datasource actively otherwise NPE. 
      * need to rememebr the getter on the Unit class.
+     * DataSource generic of T is not typesafe in T, there was a bug I could insert a String in a DataSoruce<Integer>
+     * cannot init the Datasource from within Unit code, even from lifecycle methods because I need session.
      */
     @Test(timeout = 5_000)
     public void test() throws InterruptedException {
@@ -113,6 +115,7 @@ public class RuleTest {
 
         MainDRDUnit mainDRDUnit = new MainDRDUnit(nowInputDataValue, isPresentInputDataValue);
 
+        // cannot init the Datasource from within Unit code, even from lifecycle methods because I need session.
         executor.newDataSource("sunlightInput1");
         executor.newDataSource("sunlightOutput1");
         executor.newDataSource("sunlight");
@@ -130,7 +133,7 @@ public class RuleTest {
         LOG.info("round 1");
         executor.run(mainDRDUnit);
 
-        // I have a problem substituing fireUntilHalt, so I use the "hammer till done approach"
+        // I have a problem substituting fireUntilHalt, so I use the "hammer till done approach"
         LOG.info("round 2");
         executor.run(mainDRDUnit);
 
