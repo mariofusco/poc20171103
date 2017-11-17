@@ -23,15 +23,16 @@ import org.kie.api.runtime.rule.RuleUnit;
 
 public class SunlightDTUnit implements RuleUnit {
 
-    private DataSource<LocalDateTime> now;
+    private LocalDateTime now;
 
-    private DataSource<Integer> sunlightInput1;
-    private DataSource<String> sunlightOutput1;
+    private DataSource<Integer> sunlightInput1 = DataSource.create();
+    private DataSource<String> sunlightOutput1 = DataSource.create();
 
-    private DataSource<String> sunlight;
+    private String sunlight;
 
-    public SunlightDTUnit() {
+    public SunlightDTUnit(LocalDateTime now) {
         super();
+        this.now = now;
     }
 
     public DataSource<Integer> getSunlightInput1() {
@@ -42,24 +43,20 @@ public class SunlightDTUnit implements RuleUnit {
         return sunlightOutput1;
     }
 
-    public DataSource<LocalDateTime> getNow() {
-        return now;
-    }
-
-    public DataSource<String> getSunlight() {
+    public String getSunlight() {
         return sunlight;
     }
 
     @Override
     public void onStart() {
         // input1: now.hour:
-        sunlightInput1.insert(now.iterator().next().getHour());
+        sunlightInput1.insert(now.getHour());
     }
 
     @Override
     public void onEnd() {
         // output1: sunlight
-        sunlight.insert(sunlightOutput1.iterator().next());
+        sunlight = sunlightOutput1.iterator().next();
     }
 
 

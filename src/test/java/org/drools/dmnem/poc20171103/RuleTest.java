@@ -28,7 +28,6 @@ import org.kie.api.builder.Results;
 import org.kie.api.definition.KiePackage;
 import org.kie.api.definition.rule.Rule;
 import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.rule.DataSource;
 import org.kie.api.runtime.rule.RuleUnitExecutor;
 import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNModel;
@@ -107,40 +106,23 @@ public class RuleTest {
         LOG.info("Running units");
         RuleUnitExecutor executor = RuleUnitExecutor.create().bind(kieBase);
 
-        DataSource<LocalDateTime> nowInputDataValue = executor.newDataSource("now");
-        DataSource<Boolean> isPresentInputDataValue = executor.newDataSource("isPresent");
+        LocalDateTime now = LocalDateTime.parse("2007-12-03T10:15:30");
+        Boolean isPresent = true;
 
-        nowInputDataValue.insert(LocalDateTime.parse("2007-12-03T10:15:30"));
-        isPresentInputDataValue.insert(true);
+        SunlightDTUnit sunlightDTUnit = new SunlightDTUnit(now);
+        executor.run(sunlightDTUnit);
+        String sunlight = sunlightDTUnit.getSunlight();
+        assertEquals("sunlight", sunlight);
 
-        MainDRDUnit mainDRDUnit = new MainDRDUnit(nowInputDataValue, isPresentInputDataValue);
-
-        // cannot init the Datasource from within Unit code, even from lifecycle methods because I need session.
-        executor.newDataSource("sunlightInput1");
-        executor.newDataSource("sunlightOutput1");
-        executor.newDataSource("sunlight");
-
-        executor.newDataSource("suggestedLight");
-        executor.newDataSource("suggestedLightInput1");
-        executor.newDataSource("suggestedLightInput2");
-        executor.newDataSource("suggestedLightOutput1");
-
-        executor.newDataSource("suggestedBlinds");
-        executor.newDataSource("suggestedBlindsInput1");
-        executor.newDataSource("suggestedBlindsInput2");
-        executor.newDataSource("suggestedBlindsOutput1");
-
-        LOG.info("round 1");
-        executor.run(mainDRDUnit);
-
-        // I have a problem substituting fireUntilHalt, so I use the "hammer till done approach"
-        LOG.info("round 2");
-        executor.run(mainDRDUnit);
-
-        LOG.info("Final checks");
-        System.out.println(mainDRDUnit);
-        assertEquals("sunlight", mainDRDUnit.getSunlight().iterator().next());
-        assertEquals("OFF", mainDRDUnit.getSuggestedLight().iterator().next());
-        assertEquals("OPEN", mainDRDUnit.getSuggestedBlinds().iterator().next());
+        SuggestedBlindsDTUnit suggestedBlindsDTUnit = new SuggestedBlindsDTUnit(isPresent, sunlight);
+        executor.run(suggestedBlindsDTUnit);
+        String suggestedBlinds = suggestedBlindsDTUnit.getSuggestedBlinds();
+        
+        SuggestedLightDTUnit suggestedLightDTUnit = new SuggestedLightDTUnit(isPresent, sunlight);
+        executor.run(suggestedLightDTUnit);
+        String suggestedLight = suggestedLightDTUnit.getSuggestedLight();
+        
+        assertEquals("OFF", suggestedLight);
+        assertEquals("OPEN", suggestedBlinds);
     }
 }

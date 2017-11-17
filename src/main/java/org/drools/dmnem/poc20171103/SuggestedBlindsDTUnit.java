@@ -21,18 +21,20 @@ import org.kie.api.runtime.rule.RuleUnit;
 
 public class SuggestedBlindsDTUnit implements RuleUnit {
 
-    private DataSource<Boolean> isPresent;
-    private DataSource<String> sunlight;
+    private Boolean isPresent;
+    private String sunlight;
 
-    private DataSource<Boolean> suggestedBlindsInput1;
-    private DataSource<String> suggestedBlindsInput2;
+    private DataSource<Boolean> suggestedBlindsInput1 = DataSource.create();
+    private DataSource<String> suggestedBlindsInput2 = DataSource.create();
 
-    private DataSource<String> suggestedBlindsOutput1;
+    private DataSource<String> suggestedBlindsOutput1 = DataSource.create();
 
-    private DataSource<String> suggestedBlinds;
+    private String suggestedBlinds;
 
-    public SuggestedBlindsDTUnit() {
+    public SuggestedBlindsDTUnit(Boolean isPresent, String sunlight) {
         super();
+        this.isPresent = isPresent;
+        this.sunlight = sunlight;
     }
 
     public DataSource<Boolean> getSuggestedBlindsInput1() {
@@ -47,27 +49,19 @@ public class SuggestedBlindsDTUnit implements RuleUnit {
         return suggestedBlindsOutput1;
     }
 
-    public DataSource<Boolean> getIsPresent() {
-        return isPresent;
-    }
-
-    public DataSource<String> getSunlight() {
-        return sunlight;
-    }
-
-    public DataSource<String> getSuggestedBlinds() {
+    public String getSuggestedBlinds() {
         return suggestedBlinds;
     }
 
     @Override
     public void onStart() {
-        suggestedBlindsInput1.insert(isPresent.iterator().next());
-        suggestedBlindsInput2.insert(sunlight.iterator().next());
+        suggestedBlindsInput1.insert(isPresent);
+        suggestedBlindsInput2.insert(sunlight);
     }
 
     @Override
     public void onEnd() {
-        suggestedBlinds.insert(suggestedBlindsOutput1.iterator().next());
+        suggestedBlinds = suggestedBlindsOutput1.iterator().next();
     }
 
 }

@@ -21,18 +21,20 @@ import org.kie.api.runtime.rule.RuleUnit;
 
 public class SuggestedLightDTUnit implements RuleUnit {
 
-    private DataSource<Boolean> isPresent;
-    private DataSource<String> sunlight;
+    private Boolean isPresent;
+    private String sunlight;
 
-    private DataSource<Boolean> suggestedLightInput1;
-    private DataSource<String> suggestedLightInput2;
+    private DataSource<Boolean> suggestedLightInput1 = DataSource.create();
+    private DataSource<String> suggestedLightInput2 = DataSource.create();
 
-    private DataSource<String> suggestedLightOutput1;
+    private DataSource<String> suggestedLightOutput1 = DataSource.create();
 
-    private DataSource<String> suggestedLight;
+    private String suggestedLight;
 
-    public SuggestedLightDTUnit() {
+    public SuggestedLightDTUnit(Boolean isPresent, String sunlight) {
         super();
+        this.isPresent = isPresent;
+        this.sunlight = sunlight;
     }
 
     public DataSource<Boolean> getSuggestedLightInput1() {
@@ -47,27 +49,19 @@ public class SuggestedLightDTUnit implements RuleUnit {
         return suggestedLightOutput1;
     }
 
-    public DataSource<Boolean> getIsPresent() {
-        return isPresent;
-    }
-
-    public DataSource<String> getSunlight() {
-        return sunlight;
-    }
-
-    public DataSource<String> getSuggestedLight() {
+    public String getSuggestedLight() {
         return suggestedLight;
     }
 
     @Override
     public void onStart() {
-        suggestedLightInput1.insert(isPresent.iterator().next());
-        suggestedLightInput2.insert(sunlight.iterator().next());
+        suggestedLightInput1.insert(isPresent);
+        suggestedLightInput2.insert(sunlight);
     }
 
     @Override
     public void onEnd() {
-        suggestedLight.insert(suggestedLightOutput1.iterator().next());
+        suggestedLight = suggestedLightOutput1.iterator().next();
     }
 
 }
