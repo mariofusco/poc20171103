@@ -33,6 +33,7 @@ import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNResult;
 import org.kie.dmn.api.core.DMNRuntime;
+import org.kie.dmn.core.impl.DMNContextImpl;
 import org.kie.dmn.core.util.KieHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,22 +107,23 @@ public class RuleTest {
         LOG.info("Running units");
         RuleUnitExecutor executor = RuleUnitExecutor.create().bind(kieBase);
 
-        LocalDateTime now = LocalDateTime.parse("2007-12-03T10:15:30");
-        Boolean isPresent = true;
+        DMNContext dmnContext = new DMNContextImpl();
+        dmnContext.set("now", LocalDateTime.parse("2007-12-03T10:15:30"));
+        dmnContext.set("is Present", true);
 
-        SunlightDTUnit sunlightDTUnit = new SunlightDTUnit(now);
-        executor.run(sunlightDTUnit);
-        String sunlight = sunlightDTUnit.getSunlight();
+        DMNUnit sunlightDTUnit = new SunlightDTUnit(dmnContext);
+        Object sunlight = sunlightDTUnit.execute(executor).getResult();
         assertEquals("sunlight", sunlight);
 
-        SuggestedBlindsDTUnit suggestedBlindsDTUnit = new SuggestedBlindsDTUnit(isPresent, sunlight);
-        executor.run(suggestedBlindsDTUnit);
-        String suggestedBlinds = suggestedBlindsDTUnit.getSuggestedBlinds();
-        
-        SuggestedLightDTUnit suggestedLightDTUnit = new SuggestedLightDTUnit(isPresent, sunlight);
-        executor.run(suggestedLightDTUnit);
-        String suggestedLight = suggestedLightDTUnit.getSuggestedLight();
-        
+        // in this case we mutate the main context, with hard code result knowing its key.
+        dmnContext.set("sunlight", sunlight);
+
+        SuggestedBlindsDTUnit suggestedBlindsDTUnit = new SuggestedBlindsDTUnit(dmnContext);
+        Object suggestedBlinds = suggestedBlindsDTUnit.execute(executor).getResult();
+
+        SuggestedLightDTUnit suggestedLightDTUnit = new SuggestedLightDTUnit(dmnContext);
+        Object suggestedLight = suggestedLightDTUnit.execute(executor).getResult();
+
         assertEquals("OFF", suggestedLight);
         assertEquals("OPEN", suggestedBlinds);
     }

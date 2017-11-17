@@ -19,9 +19,9 @@ package org.drools.dmnem.poc20171103;
 import java.time.LocalDateTime;
 
 import org.kie.api.runtime.rule.DataSource;
-import org.kie.api.runtime.rule.RuleUnit;
+import org.kie.dmn.api.core.DMNContext;
 
-public class SunlightDTUnit implements RuleUnit {
+public class SunlightDTUnit extends DMNUnit {
 
     private LocalDateTime now;
 
@@ -30,9 +30,9 @@ public class SunlightDTUnit implements RuleUnit {
 
     private String sunlight;
 
-    public SunlightDTUnit(LocalDateTime now) {
-        super();
-        this.now = now;
+    public SunlightDTUnit(DMNContext context) {
+        super(context);
+        this.now = (LocalDateTime) context.get("now");
     }
 
     public DataSource<Integer> getSunlightInput1() {
@@ -59,5 +59,9 @@ public class SunlightDTUnit implements RuleUnit {
         sunlight = sunlightOutput1.iterator().next();
     }
 
+    @Override
+    public String getResult() {
+        return getSunlight();
+    }
 
 }
