@@ -1,4 +1,4 @@
-package org.drools.dmnem.poc20171103;
+package temp.kiedmn;
 
 import java.util.Collections;
 import java.util.Set;

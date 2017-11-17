@@ -37,6 +37,7 @@ import org.kie.dmn.core.impl.DMNContextImpl;
 import org.kie.dmn.core.util.KieHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import temp.kiedmn.DMNUnit;
 
 public class RuleTest {
     static final Logger LOG = LoggerFactory.getLogger(RuleTest.class);

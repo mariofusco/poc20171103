@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<kmodule xmlns="http://www.drools.org/xsd/kmodule">
-  <!-- This is a minimal kmodule.xml. Ref Drools documentation, see http://docs.jboss.org/drools/release/6.1.0.Final/drools-docs/html_single/index.html#d0e1112 -->
+<kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.drools.org/xsd/kmodule">
+  <kbase name="UnitKB" default="true" packages="org.drools.dmnem.poc20171103"/>
+  <kbase name="ControllerKB" default="false" eventProcessingMode="cloud" equalsBehavior="equality" packages="temp.kiedmn">
+    <ksession name="ControllerSession1" type="stateful" default="true"/>
+  </kbase>
 </kmodule>
