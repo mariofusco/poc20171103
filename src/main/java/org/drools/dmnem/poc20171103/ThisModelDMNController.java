@@ -1,5 +1,6 @@
 package org.drools.dmnem.poc20171103;
 
+import org.drools.core.event.DebugRuleRuntimeEventListener;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -18,7 +19,7 @@ public class ThisModelDMNController {
     public static void run() {
         InputDataNode now = new InputDataNode(null, "now");
         InputDataNode isPresent = new InputDataNode(null, "is Present");
-        
+
         DecisionNode sunlight = new DecisionNode(null, "sunlight");
         DecisionNode suggestedBlinds = new DecisionNode(null, "suggested Blinds");
         DecisionNode suggestedLights = new DecisionNode(null, "suggested Lights");
@@ -33,6 +34,8 @@ public class ThisModelDMNController {
         KieContainer kieContainer = ks.newKieClasspathContainer();
 
         KieSession kieSession = kieContainer.newKieSession("ControllerSession1");
+
+        kieSession.addEventListener(new DebugRuleRuntimeEventListener());
 
         kieSession.insert(now);
         kieSession.insert(isPresent);
@@ -64,6 +67,6 @@ public class ThisModelDMNController {
         for (Object o : kieSession.getObjects()) {
             System.out.println(o);
         }
-        // then it can compute suggestedLights
+        // then will ask to compute suggestedLights
     }
 }

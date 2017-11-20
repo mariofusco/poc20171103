@@ -1,7 +1,7 @@
 package temp.kiedmn;
 
 
-public class ToBeEvaluated implements NecessaryStep {
+public class ToBeEvaluated implements DRGNodeWrapper {
 
     private DRGNode nextDecision;
 

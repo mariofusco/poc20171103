@@ -29,18 +29,9 @@ then
     insert(new IntermediateStep($dep));
 end
 
-rule "Suggest next logical step, IntermediateStep"
+rule "Suggest next logical step"
 when
-    IntermediateStep( $req: step )
-    not( Computed( step == $req ) ) 
-    forall ( InformationRequirement( decision == $req, $dep : requires ) Computed( step == $dep ) )
-then
-    insertLogical(new ToBeEvaluated($req));
-end
-
-rule "Suggest next logical step, Requested"
-when
-    Requested( $req: step )
+    NecessaryStep( $req: step )
     not( Computed( step == $req ) ) 
     forall ( InformationRequirement( decision == $req, $dep : requires ) Computed( step == $dep ) )
 then
