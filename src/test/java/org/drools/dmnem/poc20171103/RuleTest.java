@@ -18,6 +18,7 @@ package org.drools.dmnem.poc20171103;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -127,5 +128,19 @@ public class RuleTest {
 
         assertEquals("OFF", suggestedLight);
         assertEquals("OPEN", suggestedBlinds);
+    }
+
+    @Test()
+    public void testUsingDMNController() throws InterruptedException {
+        DMNContext dmnContext = new DMNContextImpl();
+        dmnContext.set("now", LocalDateTime.parse("2007-12-03T10:15:30"));
+        dmnContext.set("is Present", true);
+
+        ThisModelDMNController.run(dmnContext, Collections.emptyList());
+
+        // currently it mutates the original context, just to prove the point.
+        assertEquals("sunlight", dmnContext.get("sunlight"));
+        assertEquals("OFF", dmnContext.get("Suggested light"));
+        assertEquals("OPEN", dmnContext.get("Suggested Blinds"));
     }
 }
