@@ -68,6 +68,9 @@ public class ThisModelDMNController {
         kieSession.insert(req4);
         kieSession.insert(req5);
 
+        // compute requirements only once
+        kieSession.getAgenda().getAgendaGroup("compute-requirements").setFocus();
+
         // take from the DMNContext was is already computed (i.e.: inputData)
         List<Computed> computed = dmnContext.getAll().keySet().stream().map(ctxKey -> new Computed(drgByName.get(ctxKey))).collect(Collectors.toList());
         computed.forEach(kieSession::insert);
