@@ -15,13 +15,12 @@
 
 package org.drools.dmnem.poc20171103;
 
-import static org.junit.Assert.assertEquals;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
+import org.drools.modelcompiler.ExecutableModelProject;
 import org.junit.Test;
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
@@ -40,6 +39,8 @@ import org.kie.dmn.core.util.KieHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import temp.kiedmn.DMNUnit;
+
+import static org.junit.Assert.assertEquals;
 
 public class RuleTest {
     static final Logger LOG = LoggerFactory.getLogger(RuleTest.class);
@@ -87,11 +88,19 @@ public class RuleTest {
      * DataSource generic of T is not typesafe in T, there was a bug I could insert a String in a DataSoruce<Integer>
      * cannot init the Datasource from within Unit code, even from lifecycle methods because I need session.
      */
-    @Test(timeout = 5_000)
+    @Test//(timeout = 5_000)
     public void test() throws InterruptedException {
         KieServices kieServices = KieServices.Factory.get();
 
-        KieContainer kContainer = kieServices.getKieClasspathContainer();
+        //KieContainer kContainer = kieServices.getKieClasspathContainer();
+
+        KieContainer kContainer = ModelUtil.getKieContainerForDrls( ExecutableModelProject.class, //DrlProject.class,
+                "org/drools/dmnem/poc20171103/MainDRDUnit.drl",
+                "org/drools/dmnem/poc20171103/SuggestedBlindsDTUnit.drl",
+                "org/drools/dmnem/poc20171103/SuggestedLightDTUnit.drl",
+                "org/drools/dmnem/poc20171103/SunlightDTUnit.drl"
+                );
+
         Results verifyResults = kContainer.verify();
         for (Message m : verifyResults.getMessages()) {
             LOG.info("{}", m);
