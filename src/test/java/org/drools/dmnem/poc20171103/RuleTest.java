@@ -48,7 +48,7 @@ public class RuleTest {
     /**
      * NOTES: cannot create a kiebase/kiesession against a kiebase with UNITs
      */
-    @Test(timeout = 5_000)
+    @Test
     public void testDMN() throws InterruptedException {
         KieServices kieServices = KieServices.Factory.get();
 
@@ -88,7 +88,7 @@ public class RuleTest {
      * DataSource generic of T is not typesafe in T, there was a bug I could insert a String in a DataSoruce<Integer>
      * cannot init the Datasource from within Unit code, even from lifecycle methods because I need session.
      */
-    @Test//(timeout = 5_000)
+    @Test
     public void test() throws InterruptedException {
         KieServices kieServices = KieServices.Factory.get();
 

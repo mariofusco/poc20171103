@@ -16,17 +16,25 @@
 
 package org.drools.dmnem.poc20171103;
 
-import java.time.LocalDateTime;
-
+import org.drools.model.Model;
+import org.drools.model.impl.ModelImpl;
+import org.drools.modelcompiler.builder.KieBaseBuilder;
 import org.junit.Test;
+import org.kie.api.KieBase;
+import org.kie.api.runtime.rule.RuleUnitExecutor;
 import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.api.core.DMNResult;
 import org.kie.dmn.api.core.event.DMNRuntimeEventManager;
 import org.kie.dmn.core.api.DMNExpressionEvaluator;
 import org.kie.dmn.core.api.EvaluatorResult;
+import org.kie.dmn.core.ast.EvaluatorResultImpl;
 import org.kie.dmn.core.impl.DMNContextImpl;
 import org.kie.dmn.core.impl.DMNResultImpl;
+import temp.kiedmn.DMNUnit;
 
+import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedLightDTUnit_451;
+import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedLightDTUnit_452;
+import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedLightDTUnit_453;
 import static org.junit.Assert.assertEquals;
 
 public class EvaluatorResultTest {
@@ -36,7 +44,7 @@ public class EvaluatorResultTest {
         DMNExpressionEvaluator evaluator = new ModelBasedDMNExpressionEvaluator();
 
         DMNContext dmnContext = new DMNContextImpl();
-        dmnContext.set("now", LocalDateTime.parse("2007-12-03T10:15:30"));
+        dmnContext.set("sunlight", "sunlight");
         dmnContext.set("is Present", true);
 
         DMNResultImpl dmnResult = new DMNResultImpl( null );
@@ -49,8 +57,19 @@ public class EvaluatorResultTest {
     public static class ModelBasedDMNExpressionEvaluator implements DMNExpressionEvaluator {
 
         @Override
-        public EvaluatorResult evaluate( DMNRuntimeEventManager eventManager, DMNResult result ) {
-            throw new UnsupportedOperationException( "org.drools.dmnem.poc20171103.ExecutableModelTest.ModelBasedDMNExpressionEvaluator.evaluate -> TODO" );
+        public EvaluatorResult evaluate( DMNRuntimeEventManager eventManager, DMNResult dmnResult ) {
+            Model model = new ModelImpl()
+                    .addRule( rule_SuggestedLightDTUnit_451() )
+                    .addRule( rule_SuggestedLightDTUnit_452() )
+                    .addRule( rule_SuggestedLightDTUnit_453() );
+
+            KieBase kieBase = KieBaseBuilder.createKieBaseFromModel( model );
+            RuleUnitExecutor executor = RuleUnitExecutor.create().bind(kieBase);
+
+            DMNUnit unit = new SuggestedLightDTUnit(dmnResult.getContext());
+            Object result = unit.execute(executor).getResult();
+
+            return new EvaluatorResultImpl( result, EvaluatorResult.ResultType.SUCCESS );
         }
     }
 }
