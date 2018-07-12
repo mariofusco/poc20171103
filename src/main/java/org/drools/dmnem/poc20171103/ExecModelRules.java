@@ -21,7 +21,7 @@ import java.util.List;
 import org.drools.modelcompiler.dsl.pattern.D;
 import org.kie.dmn.feel.runtime.UnaryTest;
 
-public class ExecutableModelRules {
+public class ExecModelRules {
     /**
      * Rule name: SuggestedLightDTUnit-1
      */

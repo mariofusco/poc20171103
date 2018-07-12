@@ -28,18 +28,18 @@ import org.kie.dmn.api.core.DMNContext;
 import org.kie.dmn.core.impl.DMNContextImpl;
 import temp.kiedmn.DMNUnit;
 
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedBlindsDTUnit_451;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedBlindsDTUnit_452;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedBlindsDTUnit_453;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedLightDTUnit_451;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedLightDTUnit_452;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedLightDTUnit_453;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SunlightDTUnit__1;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SunlightDTUnit__2;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SunlightDTUnit__3;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_guard_32suggestedBlinds_32decision;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_guard_32suggestedLight_32decision;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_guard_32sunlight_32decision;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SuggestedBlindsDTUnit_451;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SuggestedBlindsDTUnit_452;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SuggestedBlindsDTUnit_453;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SuggestedLightDTUnit_451;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SuggestedLightDTUnit_452;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SuggestedLightDTUnit_453;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SunlightDTUnit__1;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SunlightDTUnit__2;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SunlightDTUnit__3;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_guard_32suggestedBlinds_32decision;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_guard_32suggestedLight_32decision;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_guard_32sunlight_32decision;
 import static org.junit.Assert.assertEquals;
 
 public class ExecutableModelTest {

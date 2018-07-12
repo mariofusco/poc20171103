@@ -32,9 +32,9 @@ import org.kie.dmn.core.impl.DMNContextImpl;
 import org.kie.dmn.core.impl.DMNResultImpl;
 import temp.kiedmn.DMNUnit;
 
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedLightDTUnit_451;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedLightDTUnit_452;
-import static org.drools.dmnem.poc20171103.ExecutableModelRules.rule_SuggestedLightDTUnit_453;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SuggestedLightDTUnit_451;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SuggestedLightDTUnit_452;
+import static org.drools.dmnem.poc20171103.ExecModelRules.rule_SuggestedLightDTUnit_453;
 import static org.junit.Assert.assertEquals;
 
 public class EvaluatorResultTest {
