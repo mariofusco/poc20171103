@@ -57,6 +57,7 @@ public class ExecModelDMNEvaluatorCompiler extends DMNEvaluatorCompilerImpl {
 
     @Override
     protected DMNExpressionEvaluator compileDecisionTable( DMNCompilerContext ctx, DMNModelImpl model, DMNBaseNode node, String dtName, DecisionTable dt ) {
+        DTableModel dTableModel = new DTableModel( model.getNamespace(), dtName, dt );
         switch (dtName) {
             case "Suggested light" : return new SuggestedLightEvaluator();
             case "Suggested Blinds" : return new SuggestedBlindsEvaluator();
