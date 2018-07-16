@@ -16,10 +16,11 @@
 
 package org.drools.dmnem.poc20171103;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 import org.drools.modelcompiler.dsl.pattern.D;
-import org.kie.dmn.feel.runtime.UnaryTest;
+
+import static org.drools.dmnem.poc20171103.UnaryTests.or;
 
 public class ExecModelRules {
     /**
@@ -44,8 +45,7 @@ public class ExecModelRules {
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
                 "SuggestedLightDTUnit-1").unit(org.drools.dmnem.poc20171103.SuggestedLightDTUnit.class)
                 .build(D.pattern(var_$pattern_Boolean$1$).expr("$expr$1$",
-                        (_this) -> org.drools.modelcompiler.util.EvaluationUtil.areNullSafeEquals(_this,
-                                false)),
+                        (_this) -> or( new UnaryTests.Suggested_32lightr0c0().getUnaryTests() ).apply( null, _this )),
                         D.on(var_suggestedLightOutput1).execute((suggestedLightOutput1) -> {
                             System.out.println("SuggestedLight ROW 1");
                             suggestedLightOutput1.insert("OFF");
@@ -78,22 +78,14 @@ public class ExecModelRules {
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
                 "SuggestedLightDTUnit-2").unit(org.drools.dmnem.poc20171103.SuggestedLightDTUnit.class)
                 .build(D.pattern(var_$pattern_Boolean$2$).expr("$expr$2$",
-                        (_this) -> org.drools.modelcompiler.util.EvaluationUtil.areNullSafeEquals(_this,
-                                true)),
+                        (_this) -> or( new UnaryTests.Suggested_32lightr1c0().getUnaryTests() ).apply( null, _this )),
                         D.pattern(var_$pattern_String$1$).expr("$expr$3$",
-                                // parse("\"sunlight\"")
-                                (_this) -> or(TemplateCompiledFEELUnaryTests.INSTANCE.getUnaryTests()).apply( null, _this )
-                                //                org.drools.modelcompiler.util.EvaluationUtil.areNullSafeEquals(_this, "sunlight")
-                        ),
+                                (_this) -> or( new UnaryTests.Suggested_32lightr1c1().getUnaryTests() ).apply( null, _this )),
                         D.on(var_suggestedLightOutput1).execute((suggestedLightOutput1) -> {
                             System.out.println("SuggestedLight ROW 2");
                             suggestedLightOutput1.insert("OFF");
                         }));
         return rule;
-    }
-
-    public static UnaryTest or( List<UnaryTest> fs ) {
-        return (a,b) -> fs.stream().anyMatch( f -> f.apply( a,b ) );
     }
 
     /**
@@ -121,11 +113,9 @@ public class ExecModelRules {
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
                 "SuggestedLightDTUnit-3").unit(org.drools.dmnem.poc20171103.SuggestedLightDTUnit.class)
                 .build(D.pattern(var_$pattern_Boolean$3$).expr("$expr$2$",
-                        (_this) -> org.drools.modelcompiler.util.EvaluationUtil.areNullSafeEquals(_this,
-                                true)),
+                        (_this) -> or( new UnaryTests.Suggested_32lightr2c0().getUnaryTests() ).apply( null, _this )),
                         D.pattern(var_$pattern_String$2$).expr("$expr$4$",
-                                (_this) -> org.drools.modelcompiler.util.EvaluationUtil.areNullSafeEquals(_this,
-                                        "night time")),
+                                (_this) -> or( new UnaryTests.Suggested_32lightr2c1().getUnaryTests() ).apply( null, _this )),
                         D.on(var_suggestedLightOutput1).execute((suggestedLightOutput1) -> {
                             System.out.println("SuggestedLight ROW 3");
                             suggestedLightOutput1.insert("ON");
@@ -251,15 +241,13 @@ public class ExecModelRules {
                 "requirements");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_sunlightInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
                 "sunlightInput1");
-        final org.drools.model.Variable<java.lang.Integer> var_$pattern_Integer$1$ = D.declarationOf(java.lang.Integer.class,
+        final org.drools.model.Variable<BigDecimal> var_$pattern_Integer$1$ = D.declarationOf(BigDecimal.class,
                 "$pattern_Integer$1$",
                 var_sunlightInput1);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
                 "SunlightDTUnit_1").unit(org.drools.dmnem.poc20171103.SunlightDTUnit.class)
                 .build(D.pattern(var_$pattern_Integer$1$).expr("$expr$5$",
-                        (_this) -> org.drools.modelcompiler.util.EvaluationUtil.compareNumbers(_this,
-                                8,
-                                "<")),
+                        (_this) -> or( new UnaryTests.sunlightr0c0().getUnaryTests() ).apply( null, _this )),
                         D.on(var_sunlightOutput1).execute((sunlightOutput1) -> {
                             System.out.println("sunlight ROW 1");
                             sunlightOutput1.insert("night time");
@@ -281,17 +269,13 @@ public class ExecModelRules {
                 "requirements");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_sunlightInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
                 "sunlightInput1");
-        final org.drools.model.Variable<java.lang.Integer> var_$pattern_Integer$2$ = D.declarationOf(java.lang.Integer.class,
+        final org.drools.model.Variable<BigDecimal> var_$pattern_Integer$2$ = D.declarationOf(BigDecimal.class,
                 "$pattern_Integer$2$",
                 var_sunlightInput1);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
                 "SunlightDTUnit_2").unit(org.drools.dmnem.poc20171103.SunlightDTUnit.class)
                 .build(D.pattern(var_$pattern_Integer$2$).expr("$expr$6$",
-                        (_this) -> org.drools.modelcompiler.util.EvaluationUtil.compareNumbers(_this,
-                                8,
-                                ">=") || org.drools.modelcompiler.util.EvaluationUtil.compareNumbers(_this,
-                                18,
-                                "<")),
+                        (_this) -> or( new UnaryTests.sunlightr1c0().getUnaryTests() ).apply( null, _this )),
                         D.on(var_sunlightOutput1).execute((sunlightOutput1) -> {
                             System.out.println("sunlight ROW 2");
                             sunlightOutput1.insert("sunlight");
@@ -313,15 +297,13 @@ public class ExecModelRules {
                 "requirements");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_sunlightInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
                 "sunlightInput1");
-        final org.drools.model.Variable<java.lang.Integer> var_$pattern_Integer$3$ = D.declarationOf(java.lang.Integer.class,
+        final org.drools.model.Variable<BigDecimal> var_$pattern_Integer$3$ = D.declarationOf(BigDecimal.class,
                 "$pattern_Integer$3$",
                 var_sunlightInput1);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
                 "SunlightDTUnit_3").unit(org.drools.dmnem.poc20171103.SunlightDTUnit.class)
                 .build(D.pattern(var_$pattern_Integer$3$).expr("$expr$7$",
-                        (_this) -> org.drools.modelcompiler.util.EvaluationUtil.compareNumbers(_this,
-                                18,
-                                ">=")),
+                        (_this) -> or( new UnaryTests.sunlightr2c0().getUnaryTests() ).apply( null, _this )),
                         D.on(var_sunlightOutput1).execute((sunlightOutput1) -> {
                             System.out.println("sunlight ROW 3");
                             sunlightOutput1.insert("night time");
@@ -351,8 +333,7 @@ public class ExecModelRules {
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
                 "SuggestedBlindsDTUnit-1").unit(org.drools.dmnem.poc20171103.SuggestedBlindsDTUnit.class)
                 .build(D.pattern(var_$pattern_Boolean$6$).expr("$expr$1$",
-                        (_this) -> org.drools.modelcompiler.util.EvaluationUtil.areNullSafeEquals(_this,
-                                false)),
+                        (_this) -> or( new UnaryTests.Suggested_32Blindsr0c0().getUnaryTests() ).apply( null, _this )),
                         D.on(var_suggestedBlindsOutput1).execute((suggestedBlindsOutput1) -> {
                             System.out.println("SuggestedBlinds ROW 1");
                             suggestedBlindsOutput1.insert("CLOSED");
@@ -385,11 +366,9 @@ public class ExecModelRules {
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
                 "SuggestedBlindsDTUnit-2").unit(org.drools.dmnem.poc20171103.SuggestedBlindsDTUnit.class)
                 .build(D.pattern(var_$pattern_Boolean$7$).expr("$expr$2$",
-                        (_this) -> org.drools.modelcompiler.util.EvaluationUtil.areNullSafeEquals(_this,
-                                true)),
+                        (_this) -> or( new UnaryTests.Suggested_32Blindsr1c0().getUnaryTests() ).apply( null, _this )),
                         D.pattern(var_$pattern_String$8$).expr("$expr$3$",
-                                (_this) -> org.drools.modelcompiler.util.EvaluationUtil.areNullSafeEquals(_this,
-                                        "sunlight")),
+                                (_this) -> or( new UnaryTests.Suggested_32Blindsr1c1().getUnaryTests() ).apply( null, _this )),
                         D.on(var_suggestedBlindsOutput1).execute((suggestedBlindsOutput1) -> {
                             System.out.println("SuggestedBlinds ROW 2");
                             suggestedBlindsOutput1.insert("OPEN");
@@ -422,11 +401,9 @@ public class ExecModelRules {
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
                 "SuggestedBlindsDTUnit-3").unit(org.drools.dmnem.poc20171103.SuggestedBlindsDTUnit.class)
                 .build(D.pattern(var_$pattern_Boolean$8$).expr("$expr$2$",
-                        (_this) -> org.drools.modelcompiler.util.EvaluationUtil.areNullSafeEquals(_this,
-                                true)),
+                        (_this) -> or( new UnaryTests.Suggested_32Blindsr2c0().getUnaryTests() ).apply( null, _this )),
                         D.pattern(var_$pattern_String$9$).expr("$expr$4$",
-                                (_this) -> org.drools.modelcompiler.util.EvaluationUtil.areNullSafeEquals(_this,
-                                        "night time")),
+                                (_this) -> or( new UnaryTests.Suggested_32Blindsr2c1().getUnaryTests() ).apply( null, _this )),
                         D.on(var_suggestedBlindsOutput1).execute((suggestedBlindsOutput1) -> {
                             System.out.println("SuggestedBlinds ROW 3");
                             suggestedBlindsOutput1.insert("CLOSED");

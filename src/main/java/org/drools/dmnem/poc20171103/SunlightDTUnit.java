@@ -16,27 +16,19 @@
 
 package org.drools.dmnem.poc20171103;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 import org.kie.api.runtime.rule.DataSource;
-import org.kie.dmn.api.core.DMNContext;
 import temp.kiedmn.DMNUnit;
 
 public class SunlightDTUnit extends DMNUnit {
 
-    private LocalDateTime now;
-
-    private DataSource<Integer> sunlightInput1 = DataSource.create();
+    private DataSource<BigDecimal> sunlightInput1;
     private DataSource<String> sunlightOutput1 = DataSource.create();
 
     private String sunlight;
 
-    public SunlightDTUnit(DMNContext context) {
-        super(context);
-        this.now = (LocalDateTime) context.get("now");
-    }
-
-    public DataSource<Integer> getSunlightInput1() {
+    public DataSource<BigDecimal> getSunlightInput1() {
         return sunlightInput1;
     }
 
@@ -50,13 +42,11 @@ public class SunlightDTUnit extends DMNUnit {
 
     @Override
     public void onStart() {
-        // input1: now.hour:
-        sunlightInput1.insert(now.getHour());
+        sunlightInput1 = DataSource.create( (BigDecimal) getValue(0) );
     }
 
     @Override
     public void onEnd() {
-        // output1: sunlight
         sunlight = sunlightOutput1.iterator().next();
     }
 

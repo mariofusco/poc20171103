@@ -17,26 +17,16 @@
 package org.drools.dmnem.poc20171103;
 
 import org.kie.api.runtime.rule.DataSource;
-import org.kie.dmn.api.core.DMNContext;
 import temp.kiedmn.DMNUnit;
 
 public class SuggestedLightDTUnit extends DMNUnit {
 
-    private Boolean isPresent;
-    private String sunlight;
-
-    private DataSource<Boolean> suggestedLightInput1 = DataSource.create();
-    private DataSource<String> suggestedLightInput2 = DataSource.create();
+    private DataSource<Boolean> suggestedLightInput1;
+    private DataSource<String> suggestedLightInput2;
 
     private DataSource<String> suggestedLightOutput1 = DataSource.create();
 
     private String suggestedLight;
-
-    public SuggestedLightDTUnit(DMNContext context) {
-        super(context);
-        this.isPresent = (Boolean) context.get("is Present");
-        this.sunlight = (String) context.get("sunlight");
-    }
 
     public DataSource<Boolean> getSuggestedLightInput1() {
         return suggestedLightInput1;
@@ -56,8 +46,8 @@ public class SuggestedLightDTUnit extends DMNUnit {
 
     @Override
     public void onStart() {
-        suggestedLightInput1.insert(isPresent);
-        suggestedLightInput2.insert(sunlight);
+        suggestedLightInput1 = DataSource.create( (Boolean) getValue(0) );
+        suggestedLightInput2 = DataSource.create( (String) getValue(1) );
     }
 
     @Override

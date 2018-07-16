@@ -30,6 +30,7 @@ import org.kie.dmn.feel.codegen.feel11.CompiledFEELUnaryTests;
 import org.kie.dmn.feel.codegen.feel11.CompilerBytecodeLoader;
 import org.kie.dmn.feel.codegen.feel11.DirectCompilerResult;
 import org.kie.dmn.feel.codegen.feel11.DirectCompilerVisitor;
+import org.kie.dmn.feel.lang.CompilerContext;
 import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.parser.feel11.FEELParser;
@@ -44,27 +45,31 @@ public class FeelUtil {
     public static final FEEL feel = FEEL.newInstance( Arrays.asList(new DoCompileFEELProfile(), new ExtendedDMNProfile()) );
 
     public static CompiledFEELExpression asFeelExpression(String text) {
-        return (CompiledFEELExpression) feel.compile( text, feel.newCompilerContext() );
+        return asFeelExpression( text, feel.newCompilerContext() );
+    }
+
+    public static CompiledFEELExpression asFeelExpression( String text, CompilerContext context ) {
+        return (CompiledFEELExpression) feel.compile( text, context );
     }
 
     public List<Object> getOutputValues( List<CompiledFEELExpression> feelExpressions, EvaluationContext ctx ) {
         return feelExpressions.stream().map( expr -> expr.apply( ctx ) ).collect( toList() );
     }
 
-    public static UnaryTest asFeelUnaryTest(String text) {
-        List<UnaryTest> unaryTests = parse( text ).getUnaryTests();
-        return unaryTests.size() == 1 ? unaryTests.get(0) : or( unaryTests );
-    }
-
     public static UnaryTest or( List<UnaryTest> fs ) {
         return (a,b) -> fs.stream().anyMatch( f -> f.apply( a,b ) );
     }
 
-    public static CompiledFEELUnaryTests parse(String input) {
-        return parse( input, Collections.emptyMap() );
+    public static UnaryTest asFeelUnaryTest(String packageName, String className, String text) {
+        List<UnaryTest> unaryTests = parse( packageName, className, text ).getUnaryTests();
+        return unaryTests.size() == 1 ? unaryTests.get(0) : or( unaryTests );
     }
 
-    public static CompiledFEELUnaryTests parse(String input, Map<String, Type> inputTypes) {
+    public static CompiledFEELUnaryTests parse(String packageName, String className, String input) {
+        return parse( packageName, className, input, Collections.emptyMap() );
+    }
+
+    public static CompiledFEELUnaryTests parse(String packageName, String className, String input, Map<String, Type> inputTypes) {
         FEEL_1_1Parser parser = FEELParser.parse(null, input, inputTypes, Collections.emptyMap(), Collections.emptyList(), Collections.emptyList());
 
         ParseTree tree = parser.expressionList();
@@ -73,7 +78,7 @@ public class FeelUtil {
         DirectCompilerResult directResult = v.visit(tree);
 
         Expression expr = directResult.getExpression();
-        CompiledFEELUnaryTests cu = new CompilerBytecodeLoader().makeFromJPUnaryTestsExpression(input, expr, directResult.getFieldDeclarations());
+        CompiledFEELUnaryTests cu = new CompilerBytecodeLoader().makeFromJPUnaryTestsExpression(packageName, className, input, expr, directResult.getFieldDeclarations());
 
         return cu;
     }
