@@ -26,7 +26,6 @@ import org.drools.javaparser.ast.expr.Expression;
 import org.kie.dmn.core.compiler.profiles.ExtendedDMNProfile;
 import org.kie.dmn.feel.FEEL;
 import org.kie.dmn.feel.codegen.feel11.CompiledFEELExpression;
-import org.kie.dmn.feel.codegen.feel11.CompiledFEELUnaryTests;
 import org.kie.dmn.feel.codegen.feel11.CompilerBytecodeLoader;
 import org.kie.dmn.feel.codegen.feel11.DirectCompilerResult;
 import org.kie.dmn.feel.codegen.feel11.DirectCompilerVisitor;
@@ -60,16 +59,8 @@ public class FeelUtil {
         return (a,b) -> fs.stream().anyMatch( f -> f.apply( a,b ) );
     }
 
-    public static UnaryTest asFeelUnaryTest(String packageName, String className, String text) {
-        List<UnaryTest> unaryTests = parse( packageName, className, text ).getUnaryTests();
-        return unaryTests.size() == 1 ? unaryTests.get(0) : or( unaryTests );
-    }
-
-    public static CompiledFEELUnaryTests parse(String packageName, String className, String input) {
-        return parse( packageName, className, input, Collections.emptyMap() );
-    }
-
-    public static CompiledFEELUnaryTests parse(String packageName, String className, String input, Map<String, Type> inputTypes) {
+    public static String getSourceForUnaryTest(String packageName, String className, String input) {
+        Map<String, Type> inputTypes = Collections.emptyMap();
         FEEL_1_1Parser parser = FEELParser.parse(null, input, inputTypes, Collections.emptyMap(), Collections.emptyList(), Collections.emptyList());
 
         ParseTree tree = parser.expressionList();
@@ -78,8 +69,6 @@ public class FeelUtil {
         DirectCompilerResult directResult = v.visit(tree);
 
         Expression expr = directResult.getExpression();
-        CompiledFEELUnaryTests cu = new CompilerBytecodeLoader().makeFromJPUnaryTestsExpression(packageName, className, input, expr, directResult.getFieldDeclarations());
-
-        return cu;
+        return new CompilerBytecodeLoader().getSourceForUnaryTest(packageName, className, input, expr, directResult.getFieldDeclarations());
     }
 }

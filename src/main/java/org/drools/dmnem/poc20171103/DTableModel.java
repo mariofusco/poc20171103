@@ -16,7 +16,6 @@
 
 package org.drools.dmnem.poc20171103;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.kie.dmn.core.compiler.DMNCompilerContext;
@@ -24,7 +23,6 @@ import org.kie.dmn.core.impl.BaseDMNTypeImpl;
 import org.kie.dmn.feel.codegen.feel11.CodegenStringUtil;
 import org.kie.dmn.feel.codegen.feel11.CompiledFEELExpression;
 import org.kie.dmn.feel.lang.CompilerContext;
-import org.kie.dmn.feel.runtime.UnaryTest;
 import org.kie.dmn.model.v1_1.DecisionRule;
 import org.kie.dmn.model.v1_1.DecisionTable;
 import org.kie.dmn.model.v1_1.InputClause;
@@ -52,24 +50,26 @@ public class DTableModel {
         this.rows = dt.getRule().stream().map( DRowModel::new ).collect( toList() );
     }
 
-    public List<CompiledFEELExpression> getFeelExpressionsForInputs(DMNCompilerContext ctx) {
+    public List<DColumnModel> getInputs() {
+        return inputs;
+    }
+
+    public List<CompiledFEELExpression> getFeelExpressionsForInputs( DMNCompilerContext ctx) {
         CompilerContext feelctx = FeelUtil.feel.newCompilerContext();
         ctx.getVariables().forEach( (k, v) -> feelctx.addInputVariableType( k, ((BaseDMNTypeImpl ) v).getFeelType() ) );
         return inputs.stream().map( DColumnModel::getName ).map( n -> asFeelExpression( n, feelctx ) ).collect( toList() );
     }
 
-    public List<List<UnaryTest>> getUnaryTests() {
-        List<List<UnaryTest>> result = new ArrayList<>();
+    public String getUnaryTestsSource() {
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < rows.size(); i++) {
-            List<UnaryTest> list = new ArrayList<>();
             DRowModel row = rows.get(i);
             for (int j = 0; j < row.inputs.size(); j++) {
                 String input = row.inputs.get(j);
-                list.add( FeelUtil.asFeelUnaryTest( namespace, dtName + "r" + i + "c" + j, input ) );
+                sb.append( FeelUtil.getSourceForUnaryTest( namespace, dtName + "r" + i + "c" + j, input ) );
             }
-            result.add(list);
         }
-        return result;
+        return sb.toString();
     }
 
     public static class DRowModel {

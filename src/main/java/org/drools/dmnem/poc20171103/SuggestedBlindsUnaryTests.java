@@ -21,8 +21,7 @@ import java.util.List;
 import org.kie.dmn.feel.codegen.feel11.CompiledFEELUnaryTests;
 import org.kie.dmn.feel.runtime.UnaryTest;
 
-import static org.kie.dmn.feel.codegen.feel11.CompiledFEELSemanticMappings.eq;
-import static org.kie.dmn.feel.codegen.feel11.CompiledFEELSemanticMappings.list;
+import static org.kie.dmn.feel.codegen.feel11.CompiledFEELSemanticMappings.*;
 
 public class SuggestedBlindsUnaryTests {
     public static class Suggested_32Blindsr0c0 implements CompiledFEELUnaryTests {
