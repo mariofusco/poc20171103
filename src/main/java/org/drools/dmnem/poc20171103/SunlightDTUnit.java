@@ -16,43 +16,30 @@
 
 package org.drools.dmnem.poc20171103;
 
-import java.math.BigDecimal;
-
 import org.kie.api.runtime.rule.DataSource;
 import temp.kiedmn.DMNUnit;
 
 public class SunlightDTUnit extends DMNUnit {
 
-    private DataSource<BigDecimal> sunlightInput1;
-    private DataSource<String> sunlightOutput1 = DataSource.create();
+    private DataSource<Object> input0;
 
-    private String sunlight;
+    private DataSource<Object> output0 = DataSource.create();
 
-    public DataSource<BigDecimal> getSunlightInput1() {
-        return sunlightInput1;
+    public DataSource<Object> getInput0() {
+        return input0;
     }
 
-    public DataSource<String> getSunlightOutput1() {
-        return sunlightOutput1;
-    }
-
-    public String getSunlight() {
-        return sunlight;
+    public DataSource<Object> getOutput0() {
+        return output0;
     }
 
     @Override
     public void onStart() {
-        sunlightInput1 = DataSource.create( (BigDecimal) getValue(0) );
+        input0 = DataSource.create( getValue(0) );
     }
 
     @Override
     public void onEnd() {
-        sunlight = sunlightOutput1.iterator().next();
+        result = output0.iterator().next();
     }
-
-    @Override
-    public String getResult() {
-        return getSunlight();
-    }
-
 }

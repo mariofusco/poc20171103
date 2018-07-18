@@ -28,7 +28,7 @@ import static org.kie.dmn.feel.codegen.feel11.CompiledFEELSemanticMappings.lt;
 
 public class UnaryTests {
     public static UnaryTest or( List<UnaryTest> fs ) {
-        return (a,b) -> fs.stream().anyMatch( f -> f.apply( a,b ) );
+        return fs.size() == 1 ? fs.get(0) : (a,b) -> fs.stream().anyMatch( f -> f.apply( a,b ) );
     }
 
     public static class Suggested_32lightr0c0 implements CompiledFEELUnaryTests {

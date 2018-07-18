@@ -17,12 +17,16 @@ public abstract class DMNUnit implements RuleUnit {
     private EvaluationContext evalCtx;
     private List<CompiledFEELExpression> compiledExprs;
 
+    protected Object result;
+
     // TODO
     public Set<String> getRequirements() {
         return Collections.emptySet();
     }
 
-    public abstract Object getResult();
+    public Object getResult() {
+        return result;
+    }
 
     public DMNDecisionResult execute(RuleUnitExecutor executor) {
         executor.run(this);
@@ -30,8 +34,8 @@ public abstract class DMNUnit implements RuleUnit {
         return result;
     }
 
-    protected <T> T getValue( int pos ) {
-        return (T) compiledExprs.get(pos).apply( evalCtx );
+    protected Object getValue( int pos ) {
+        return compiledExprs.get(pos).apply( evalCtx );
     }
 
     public DMNUnit setEvalCtx( EvaluationContext evalCtx ) {

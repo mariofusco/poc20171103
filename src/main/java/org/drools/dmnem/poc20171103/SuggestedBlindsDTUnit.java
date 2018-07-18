@@ -21,43 +21,31 @@ import temp.kiedmn.DMNUnit;
 
 public class SuggestedBlindsDTUnit extends DMNUnit {
 
-    private DataSource<Boolean> suggestedBlindsInput1;
-    private DataSource<String> suggestedBlindsInput2;
+    private DataSource<Object> input0;
+    private DataSource<Object> input1;
 
-    private DataSource<String> suggestedBlindsOutput1 = DataSource.create();
+    private DataSource<Object> output0 = DataSource.create();
 
-    private String suggestedBlinds;
-
-    public DataSource<Boolean> getSuggestedBlindsInput1() {
-        return suggestedBlindsInput1;
+    public DataSource<Object> getInput0() {
+        return input0;
     }
 
-    public DataSource<String> getSuggestedBlindsInput2() {
-        return suggestedBlindsInput2;
+    public DataSource<Object> getInput1() {
+        return input1;
     }
 
-    public DataSource<String> getSuggestedBlindsOutput1() {
-        return suggestedBlindsOutput1;
-    }
-
-    public String getSuggestedBlinds() {
-        return suggestedBlinds;
+    public DataSource<Object> getOutput0() {
+        return output0;
     }
 
     @Override
     public void onStart() {
-        suggestedBlindsInput1 = DataSource.create( (Boolean) getValue(0) );
-        suggestedBlindsInput2 = DataSource.create( (String) getValue(1) );
+        input0 = DataSource.create( getValue(0) );
+        input1 = DataSource.create( getValue(1) );
     }
 
     @Override
     public void onEnd() {
-        suggestedBlinds = suggestedBlindsOutput1.iterator().next();
+        result = output0.iterator().next();
     }
-
-    @Override
-    public Object getResult() {
-        return getSuggestedBlinds();
-    }
-
 }

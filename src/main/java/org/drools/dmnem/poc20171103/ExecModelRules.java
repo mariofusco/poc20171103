@@ -16,8 +16,6 @@
 
 package org.drools.dmnem.poc20171103;
 
-import java.math.BigDecimal;
-
 import org.drools.modelcompiler.dsl.pattern.D;
 
 import static org.drools.dmnem.poc20171103.UnaryTests.or;
@@ -29,17 +27,15 @@ public class ExecModelRules {
     public static org.drools.model.Rule rule_SuggestedLightDTUnit_451() {
         final org.drools.model.UnitData<java.lang.Object> var_result = D.unitData(java.lang.Object.class,
                 "result");
-        final org.drools.model.UnitData<java.util.Set> var_requirements = D.unitData(java.util.Set.class,
-                "requirements");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedLightInput2 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedLightInput2");
+                "input1");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedLightInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedLightInput1");
+                "input0");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedLightOutput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedLightOutput1");
-        final org.drools.model.UnitData<java.lang.String> var_suggestedLight = D.unitData(java.lang.String.class,
+                "output0");
+        final org.drools.model.UnitData<java.lang.Object> var_suggestedLight = D.unitData(java.lang.Object.class,
                 "suggestedLight");
-        final org.drools.model.Variable<java.lang.Boolean> var_$pattern_Boolean$1$ = D.declarationOf(java.lang.Boolean.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Boolean$1$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Boolean$1$",
                 var_suggestedLightInput1);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -59,20 +55,18 @@ public class ExecModelRules {
     public static org.drools.model.Rule rule_SuggestedLightDTUnit_452() {
         final org.drools.model.UnitData<java.lang.Object> var_result = D.unitData(java.lang.Object.class,
                 "result");
-        final org.drools.model.UnitData<java.util.Set> var_requirements = D.unitData(java.util.Set.class,
-                "requirements");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedLightInput2 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedLightInput2");
+                "input1");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedLightInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedLightInput1");
+                "input0");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedLightOutput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedLightOutput1");
-        final org.drools.model.UnitData<java.lang.String> var_suggestedLight = D.unitData(java.lang.String.class,
+                "output0");
+        final org.drools.model.UnitData<java.lang.Object> var_suggestedLight = D.unitData(java.lang.Object.class,
                 "suggestedLight");
-        final org.drools.model.Variable<java.lang.Boolean> var_$pattern_Boolean$2$ = D.declarationOf(java.lang.Boolean.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Boolean$2$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Boolean$2$",
                 var_suggestedLightInput1);
-        final org.drools.model.Variable<java.lang.String> var_$pattern_String$1$ = D.declarationOf(java.lang.String.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_String$1$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_String$1$",
                 var_suggestedLightInput2);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -94,20 +88,18 @@ public class ExecModelRules {
     public static org.drools.model.Rule rule_SuggestedLightDTUnit_453() {
         final org.drools.model.UnitData<java.lang.Object> var_result = D.unitData(java.lang.Object.class,
                 "result");
-        final org.drools.model.UnitData<java.util.Set> var_requirements = D.unitData(java.util.Set.class,
-                "requirements");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedLightInput2 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedLightInput2");
+                "input1");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedLightInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedLightInput1");
+                "input0");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedLightOutput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedLightOutput1");
-        final org.drools.model.UnitData<java.lang.String> var_suggestedLight = D.unitData(java.lang.String.class,
+                "output0");
+        final org.drools.model.UnitData<java.lang.Object> var_suggestedLight = D.unitData(java.lang.Object.class,
                 "suggestedLight");
-        final org.drools.model.Variable<java.lang.Boolean> var_$pattern_Boolean$3$ = D.declarationOf(java.lang.Boolean.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Boolean$3$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Boolean$3$",
                 var_suggestedLightInput1);
-        final org.drools.model.Variable<java.lang.String> var_$pattern_String$2$ = D.declarationOf(java.lang.String.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_String$2$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_String$2$",
                 var_suggestedLightInput2);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -140,7 +132,7 @@ public class ExecModelRules {
         final org.drools.model.Variable<java.time.LocalDateTime> var_$pattern_LocalDateTime$1$ = D.declarationOf(java.time.LocalDateTime.class,
                 "$pattern_LocalDateTime$1$",
                 var_now);
-        final org.drools.model.Variable<java.lang.String> var_sCoPe1_$pattern_String$3$ = D.declarationOf(java.lang.String.class,
+        final org.drools.model.Variable<java.lang.Object> var_sCoPe1_$pattern_String$3$ = D.declarationOf(java.lang.Object.class,
                 "sCoPe1_$pattern_String$3$",
                 var_sunlight);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -169,13 +161,13 @@ public class ExecModelRules {
                 "suggestedLight");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_isPresent = D.unitData(org.kie.api.runtime.rule.DataSource.class,
                 "isPresent");
-        final org.drools.model.Variable<java.lang.String> var_$pattern_String$4$ = D.declarationOf(java.lang.String.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_String$4$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_String$4$",
                 var_sunlight);
-        final org.drools.model.Variable<java.lang.Boolean> var_$pattern_Boolean$4$ = D.declarationOf(java.lang.Boolean.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Boolean$4$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Boolean$4$",
                 var_isPresent);
-        final org.drools.model.Variable<java.lang.String> var_sCoPe2_$pattern_String$5$ = D.declarationOf(java.lang.String.class,
+        final org.drools.model.Variable<java.lang.Object> var_sCoPe2_$pattern_String$5$ = D.declarationOf(java.lang.Object.class,
                 "sCoPe2_$pattern_String$5$",
                 var_suggestedLight);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -205,13 +197,13 @@ public class ExecModelRules {
                 "suggestedLight");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_isPresent = D.unitData(org.kie.api.runtime.rule.DataSource.class,
                 "isPresent");
-        final org.drools.model.Variable<java.lang.String> var_$pattern_String$6$ = D.declarationOf(java.lang.String.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_String$6$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_String$6$",
                 var_sunlight);
-        final org.drools.model.Variable<java.lang.Boolean> var_$pattern_Boolean$5$ = D.declarationOf(java.lang.Boolean.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Boolean$5$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Boolean$5$",
                 var_isPresent);
-        final org.drools.model.Variable<java.lang.String> var_sCoPe3_$pattern_String$7$ = D.declarationOf(java.lang.String.class,
+        final org.drools.model.Variable<java.lang.Object> var_sCoPe3_$pattern_String$7$ = D.declarationOf(java.lang.Object.class,
                 "sCoPe3_$pattern_String$7$",
                 var_suggestedBlinds);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -232,16 +224,14 @@ public class ExecModelRules {
      */
     public static org.drools.model.Rule rule_SunlightDTUnit__1() {
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_sunlightOutput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "sunlightOutput1");
+                "output0");
         final org.drools.model.UnitData<java.lang.Object> var_result = D.unitData(java.lang.Object.class,
                 "result");
-        final org.drools.model.UnitData<java.lang.String> var_sunlight = D.unitData(java.lang.String.class,
+        final org.drools.model.UnitData<java.lang.Object> var_sunlight = D.unitData(java.lang.Object.class,
                 "sunlight");
-        final org.drools.model.UnitData<java.util.Set> var_requirements = D.unitData(java.util.Set.class,
-                "requirements");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_sunlightInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "sunlightInput1");
-        final org.drools.model.Variable<BigDecimal> var_$pattern_Integer$1$ = D.declarationOf(BigDecimal.class,
+                "input0");
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Integer$1$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Integer$1$",
                 var_sunlightInput1);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -260,16 +250,14 @@ public class ExecModelRules {
      */
     public static org.drools.model.Rule rule_SunlightDTUnit__2() {
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_sunlightOutput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "sunlightOutput1");
+                "output0");
         final org.drools.model.UnitData<java.lang.Object> var_result = D.unitData(java.lang.Object.class,
                 "result");
-        final org.drools.model.UnitData<java.lang.String> var_sunlight = D.unitData(java.lang.String.class,
+        final org.drools.model.UnitData<java.lang.Object> var_sunlight = D.unitData(java.lang.Object.class,
                 "sunlight");
-        final org.drools.model.UnitData<java.util.Set> var_requirements = D.unitData(java.util.Set.class,
-                "requirements");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_sunlightInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "sunlightInput1");
-        final org.drools.model.Variable<BigDecimal> var_$pattern_Integer$2$ = D.declarationOf(BigDecimal.class,
+                "input0");
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Integer$2$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Integer$2$",
                 var_sunlightInput1);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -288,16 +276,14 @@ public class ExecModelRules {
      */
     public static org.drools.model.Rule rule_SunlightDTUnit__3() {
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_sunlightOutput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "sunlightOutput1");
+                "output0");
         final org.drools.model.UnitData<java.lang.Object> var_result = D.unitData(java.lang.Object.class,
                 "result");
-        final org.drools.model.UnitData<java.lang.String> var_sunlight = D.unitData(java.lang.String.class,
+        final org.drools.model.UnitData<java.lang.Object> var_sunlight = D.unitData(java.lang.Object.class,
                 "sunlight");
-        final org.drools.model.UnitData<java.util.Set> var_requirements = D.unitData(java.util.Set.class,
-                "requirements");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_sunlightInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "sunlightInput1");
-        final org.drools.model.Variable<BigDecimal> var_$pattern_Integer$3$ = D.declarationOf(BigDecimal.class,
+                "input0");
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Integer$3$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Integer$3$",
                 var_sunlightInput1);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -316,18 +302,16 @@ public class ExecModelRules {
      */
     public static org.drools.model.Rule rule_SuggestedBlindsDTUnit_451() {
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedBlindsInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedBlindsInput1");
+                "input0");
         final org.drools.model.UnitData<java.lang.Object> var_result = D.unitData(java.lang.Object.class,
                 "result");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedBlindsInput2 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedBlindsInput2");
-        final org.drools.model.UnitData<java.util.Set> var_requirements = D.unitData(java.util.Set.class,
-                "requirements");
-        final org.drools.model.UnitData<java.lang.String> var_suggestedBlinds = D.unitData(java.lang.String.class,
+                "input1");
+        final org.drools.model.UnitData<java.lang.Object> var_suggestedBlinds = D.unitData(java.lang.Object.class,
                 "suggestedBlinds");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedBlindsOutput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedBlindsOutput1");
-        final org.drools.model.Variable<java.lang.Boolean> var_$pattern_Boolean$6$ = D.declarationOf(java.lang.Boolean.class,
+                "output0");
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Boolean$6$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Boolean$6$",
                 var_suggestedBlindsInput1);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -346,21 +330,19 @@ public class ExecModelRules {
      */
     public static org.drools.model.Rule rule_SuggestedBlindsDTUnit_452() {
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedBlindsInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedBlindsInput1");
+                "input0");
         final org.drools.model.UnitData<java.lang.Object> var_result = D.unitData(java.lang.Object.class,
                 "result");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedBlindsInput2 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedBlindsInput2");
-        final org.drools.model.UnitData<java.util.Set> var_requirements = D.unitData(java.util.Set.class,
-                "requirements");
-        final org.drools.model.UnitData<java.lang.String> var_suggestedBlinds = D.unitData(java.lang.String.class,
+                "input1");
+        final org.drools.model.UnitData<java.lang.Object> var_suggestedBlinds = D.unitData(java.lang.Object.class,
                 "suggestedBlinds");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedBlindsOutput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedBlindsOutput1");
-        final org.drools.model.Variable<java.lang.Boolean> var_$pattern_Boolean$7$ = D.declarationOf(java.lang.Boolean.class,
+                "output0");
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Boolean$7$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Boolean$7$",
                 var_suggestedBlindsInput1);
-        final org.drools.model.Variable<java.lang.String> var_$pattern_String$8$ = D.declarationOf(java.lang.String.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_String$8$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_String$8$",
                 var_suggestedBlindsInput2);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",
@@ -381,21 +363,19 @@ public class ExecModelRules {
      */
     public static org.drools.model.Rule rule_SuggestedBlindsDTUnit_453() {
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedBlindsInput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedBlindsInput1");
+                "input0");
         final org.drools.model.UnitData<java.lang.Object> var_result = D.unitData(java.lang.Object.class,
                 "result");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedBlindsInput2 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedBlindsInput2");
-        final org.drools.model.UnitData<java.util.Set> var_requirements = D.unitData(java.util.Set.class,
-                "requirements");
-        final org.drools.model.UnitData<java.lang.String> var_suggestedBlinds = D.unitData(java.lang.String.class,
+                "input1");
+        final org.drools.model.UnitData<java.lang.Object> var_suggestedBlinds = D.unitData(java.lang.Object.class,
                 "suggestedBlinds");
         final org.drools.model.UnitData<org.kie.api.runtime.rule.DataSource> var_suggestedBlindsOutput1 = D.unitData(org.kie.api.runtime.rule.DataSource.class,
-                "suggestedBlindsOutput1");
-        final org.drools.model.Variable<java.lang.Boolean> var_$pattern_Boolean$8$ = D.declarationOf(java.lang.Boolean.class,
+                "output0");
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_Boolean$8$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_Boolean$8$",
                 var_suggestedBlindsInput1);
-        final org.drools.model.Variable<java.lang.String> var_$pattern_String$9$ = D.declarationOf(java.lang.String.class,
+        final org.drools.model.Variable<java.lang.Object> var_$pattern_String$9$ = D.declarationOf(java.lang.Object.class,
                 "$pattern_String$9$",
                 var_suggestedBlindsInput2);
         org.drools.model.Rule rule = D.rule("org.drools.dmnem.poc20171103",

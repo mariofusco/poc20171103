@@ -21,43 +21,31 @@ import temp.kiedmn.DMNUnit;
 
 public class SuggestedLightDTUnit extends DMNUnit {
 
-    private DataSource<Boolean> suggestedLightInput1;
-    private DataSource<String> suggestedLightInput2;
+    private DataSource<Object> input0;
+    private DataSource<Object> input1;
 
-    private DataSource<String> suggestedLightOutput1 = DataSource.create();
+    private DataSource<Object> output0 = DataSource.create();
 
-    private String suggestedLight;
-
-    public DataSource<Boolean> getSuggestedLightInput1() {
-        return suggestedLightInput1;
+    public DataSource<Object> getInput0() {
+        return input0;
     }
 
-    public DataSource<String> getSuggestedLightInput2() {
-        return suggestedLightInput2;
+    public DataSource<Object> getInput1() {
+        return input1;
     }
 
-    public DataSource<String> getSuggestedLightOutput1() {
-        return suggestedLightOutput1;
-    }
-
-    public String getSuggestedLight() {
-        return suggestedLight;
+    public DataSource<Object> getOutput0() {
+        return output0;
     }
 
     @Override
     public void onStart() {
-        suggestedLightInput1 = DataSource.create( (Boolean) getValue(0) );
-        suggestedLightInput2 = DataSource.create( (String) getValue(1) );
+        input0 = DataSource.create( getValue(0) );
+        input1 = DataSource.create( getValue(1) );
     }
 
     @Override
     public void onEnd() {
-        suggestedLight = suggestedLightOutput1.iterator().next();
+        result = output0.iterator().next();
     }
-
-    @Override
-    public Object getResult() {
-        return getSuggestedLight();
-    }
-
 }
