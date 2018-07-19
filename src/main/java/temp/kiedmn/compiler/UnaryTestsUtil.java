@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
-package org.drools.dmnem.poc20171103;
+package temp.kiedmn.compiler;
 
 import java.util.List;
 
-import org.drools.model.Rule;
-import temp.kiedmn.DMNUnit;
+import org.kie.dmn.feel.runtime.UnaryTest;
 
-import static java.util.Arrays.asList;
-
-import static org.drools.dmnem.poc20171103.SuggestedBlindsExecModel.*;
-
-public class SuggestedBlindsEvaluator extends AbstractModelEvaluator {
-
-    @Override
-    protected List<Rule> getRules() {
-        return asList( rule_SuggestedBlindsDTUnit_451(), rule_SuggestedBlindsDTUnit_452() , rule_SuggestedBlindsDTUnit_453() );
-    }
-
-    @Override
-    protected DMNUnit getDMNUnit() {
-        return new SuggestedBlindsDTUnit();
+public class UnaryTestsUtil {
+    public static UnaryTest unaryTestsOr( List<UnaryTest> fs ) {
+        return fs.size() == 1 ? fs.get(0) : (a,b) -> fs.stream().anyMatch( f -> f.apply( a,b ) );
     }
 }

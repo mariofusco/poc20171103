@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.dmnem.poc20171103;
+package temp.kiedmn.compiler;
 
 import java.util.List;
 
@@ -31,18 +31,18 @@ import org.kie.dmn.model.v1_1.UnaryTests;
 
 import static java.util.stream.Collectors.toList;
 
-import static org.drools.dmnem.poc20171103.FeelUtil.asFeelExpression;
+import static temp.kiedmn.compiler.FeelUtil.asFeelExpression;
 
 public class DTableModel {
     private final String namespace;
-    private final String dtName;
+    private final String tableName;
     private final List<DColumnModel> inputs;
     private final int outputsNr;
     private final List<DRowModel> rows;
 
     public DTableModel(String namespace, String dtName, DecisionTable dt) {
         this.namespace = CodegenStringUtil.escapeIdentifier( namespace );
-        this.dtName = CodegenStringUtil.escapeIdentifier( dtName );
+        this.tableName = CodegenStringUtil.escapeIdentifier( dtName );
         this.inputs = dt.getInput().stream()
                 .map( InputClause::getInputExpression )
                 .map( DColumnModel::new ).collect( toList() );
@@ -50,26 +50,30 @@ public class DTableModel {
         this.rows = dt.getRule().stream().map( DRowModel::new ).collect( toList() );
     }
 
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
     public List<DColumnModel> getInputs() {
         return inputs;
+    }
+
+    public List<DRowModel> getRows() {
+        return rows;
+    }
+
+    public int getOutputsNr() {
+        return outputsNr;
     }
 
     public List<CompiledFEELExpression> getFeelExpressionsForInputs( DMNCompilerContext ctx) {
         CompilerContext feelctx = FeelUtil.feel.newCompilerContext();
         ctx.getVariables().forEach( (k, v) -> feelctx.addInputVariableType( k, ((BaseDMNTypeImpl ) v).getFeelType() ) );
         return inputs.stream().map( DColumnModel::getName ).map( n -> asFeelExpression( n, feelctx ) ).collect( toList() );
-    }
-
-    public String getUnaryTestsSource() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < rows.size(); i++) {
-            DRowModel row = rows.get(i);
-            for (int j = 0; j < row.inputs.size(); j++) {
-                String input = row.inputs.get(j);
-                sb.append( FeelUtil.getSourceForUnaryTest( namespace, dtName + "r" + i + "c" + j, input ) );
-            }
-        }
-        return sb.toString();
     }
 
     public static class DRowModel {
@@ -84,6 +88,14 @@ public class DTableModel {
 
         public List<CompiledFEELExpression> getOutputsAsFeelExpressions() {
             return outputs.stream().map( FeelUtil::asFeelExpression ).collect( toList() );
+        }
+
+        public List<String> getInputs() {
+            return inputs;
+        }
+
+        public List<String> getOutputs() {
+            return outputs;
         }
     }
 

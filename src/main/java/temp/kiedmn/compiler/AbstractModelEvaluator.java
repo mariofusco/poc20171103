@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.dmnem.poc20171103;
+package temp.kiedmn.compiler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +27,7 @@ import org.drools.model.Rule;
 import org.drools.model.impl.ModelImpl;
 import org.drools.modelcompiler.builder.KieBaseBuilder;
 import org.kie.api.KieBase;
+import org.kie.api.KieServices;
 import org.kie.api.runtime.rule.RuleUnitExecutor;
 import org.kie.dmn.api.core.DMNResult;
 import org.kie.dmn.api.core.event.DMNRuntimeEventManager;
@@ -57,8 +58,8 @@ public abstract class AbstractModelEvaluator implements DMNExpressionEvaluator {
     private String nodeName;
 
     protected AbstractModelEvaluator() {
-        Model model = getRules().stream().reduce( new ModelImpl(), ModelImpl::addRule, ( m1, m2) -> { throw new UnsupportedOperationException(); } );
-        kieBase = KieBaseBuilder.createKieBaseFromModel( model );
+        Model model = getRules().stream().reduce( new ModelImpl(), ModelImpl::addRule, (m1, m2) -> { throw new UnsupportedOperationException(); } );
+        kieBase = KieBaseBuilder.createKieBaseFromModel( model, KieServices.get().newKieBaseConfiguration(null, this.getClass().getClassLoader() ) );
     }
 
     protected abstract List<Rule> getRules();

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.dmnem.poc20171103;
+package temp.kiedmn.compiler;
 
 import java.util.Arrays;
 import java.util.Collections;

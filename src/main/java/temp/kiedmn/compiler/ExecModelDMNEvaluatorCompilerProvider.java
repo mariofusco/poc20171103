@@ -14,26 +14,16 @@
  * limitations under the License.
  */
 
-package org.drools.dmnem.poc20171103;
+package temp.kiedmn.compiler;
 
-import java.util.List;
+import org.kie.dmn.core.compiler.DMNCompilerImpl;
+import org.kie.dmn.core.compiler.DMNEvaluatorCompiler;
+import org.kie.dmn.core.compiler.DMNEvaluatorCompilerProvider;
+import org.kie.dmn.core.compiler.DMNFEELHelper;
 
-import org.drools.model.Rule;
-import temp.kiedmn.DMNUnit;
-
-import static java.util.Arrays.asList;
-
-import static org.drools.dmnem.poc20171103.SuggestedLightExecModel.*;
-
-public class SuggestedLightEvaluator extends AbstractModelEvaluator {
-
+public class ExecModelDMNEvaluatorCompilerProvider implements DMNEvaluatorCompilerProvider {
     @Override
-    protected List<Rule> getRules() {
-        return asList( rule_SuggestedLightDTUnit_451(), rule_SuggestedLightDTUnit_452() , rule_SuggestedLightDTUnit_453() );
-    }
-
-    @Override
-    protected DMNUnit getDMNUnit() {
-        return new SuggestedLightDTUnit();
+    public DMNEvaluatorCompiler create( DMNCompilerImpl compiler, DMNFEELHelper feel ) {
+        return new ExecModelDMNEvaluatorCompiler( compiler, feel );
     }
 }
