@@ -40,6 +40,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -119,6 +120,35 @@ public class RuleTest {
         assertThat(decisionResult.values(), hasSize(2));
         assertThat(decisionResult, hasEntry(is("Approval Status"), is("Approved")));
         assertThat(decisionResult, hasEntry(is("Decision Review"), is("Decision final")));
+    }
+
+    @Test
+    public void testSimpleDecisionTableHitPolicyAnyEqualRules() {
+        testSimpleDecisionTableHitPolicyAny("0004-simpletable-A.dmn", "0004-simpletable-A", true);
+    }
+
+    @Test
+    public void testSimpleDecisionTableHitPolicyAnyNonEqualRules() {
+        testSimpleDecisionTableHitPolicyAny("0004-simpletable-A-non-equal.dmn", "0004-simpletable-A-non-equal", false);
+    }
+
+    private void testSimpleDecisionTableHitPolicyAny(final String resourceName, final String modelName, final boolean equalRules) {
+        DMNRuntime dmnRuntime = getDmnRuntime(resourceName);
+        DMNModel dmnModel = dmnRuntime.getModel("https://github.com/kiegroup/kie-dmn", modelName);
+        assertThat(dmnModel, notNullValue());
+
+        final DMNContext context = getSimpleTableContext(BigDecimal.valueOf(18), "Medium", true);
+
+        final DMNResult dmnResult = dmnRuntime.evaluateAll(dmnModel, context);
+        System.out.println(dmnResult);
+
+        final DMNContext result = dmnResult.getContext();
+        if (equalRules) {
+            assertThat(result.get("Approval Status"), is("Approved"));
+        } else {
+            assertThat(dmnResult.hasErrors(), is(true));
+            assertThat((String) result.get("Approval Status"), isEmptyOrNullString());
+        }
     }
 
     private DMNRuntime getDmnRuntime(String dmnFile) {
