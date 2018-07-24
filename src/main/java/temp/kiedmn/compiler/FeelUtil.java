@@ -18,7 +18,6 @@ package temp.kiedmn.compiler;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -30,14 +29,10 @@ import org.kie.dmn.feel.codegen.feel11.CompilerBytecodeLoader;
 import org.kie.dmn.feel.codegen.feel11.DirectCompilerResult;
 import org.kie.dmn.feel.codegen.feel11.DirectCompilerVisitor;
 import org.kie.dmn.feel.lang.CompilerContext;
-import org.kie.dmn.feel.lang.EvaluationContext;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.parser.feel11.FEELParser;
 import org.kie.dmn.feel.parser.feel11.FEEL_1_1Parser;
 import org.kie.dmn.feel.parser.feel11.profiles.DoCompileFEELProfile;
-import org.kie.dmn.feel.runtime.UnaryTest;
-
-import static java.util.stream.Collectors.toList;
 
 public class FeelUtil {
 
@@ -49,14 +44,6 @@ public class FeelUtil {
 
     public static CompiledFEELExpression asFeelExpression( String text, CompilerContext context ) {
         return (CompiledFEELExpression) feel.compile( text, context );
-    }
-
-    public List<Object> getOutputValues( List<CompiledFEELExpression> feelExpressions, EvaluationContext ctx ) {
-        return feelExpressions.stream().map( expr -> expr.apply( ctx ) ).collect( toList() );
-    }
-
-    public static UnaryTest or( List<UnaryTest> fs ) {
-        return (a,b) -> fs.stream().anyMatch( f -> f.apply( a,b ) );
     }
 
     public static String getSourceForUnaryTest(String packageName, String className, String input) {

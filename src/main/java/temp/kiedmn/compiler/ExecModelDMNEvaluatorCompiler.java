@@ -71,7 +71,7 @@ public class ExecModelDMNEvaluatorCompiler extends DMNEvaluatorCompilerImpl {
     protected DMNExpressionEvaluator compileDecisionTable( DMNCompilerContext ctx, DMNModelImpl model, DMNBaseNode node, String dtName, DecisionTable dt ) {
         DTableModel dTableModel = new DTableModel( model.getNamespace(), dtName, dt );
         AbstractModelEvaluator evaluator = generateEvaluator(dTableModel);
-        evaluator.initParameters(model, node, dt, dtName, dTableModel.getFeelExpressionsForInputs( ctx ));
+        evaluator.initParameters(ctx, dTableModel, model, node, dt);
         return evaluator;
     }
 
@@ -169,37 +169,39 @@ public class ExecModelDMNEvaluatorCompiler extends DMNEvaluatorCompilerImpl {
 
             int exprCounter = 0;
 
+            sb.append( "\n" );
+            sb.append( "    private static final UnitData<List> var_indexes = D.unitData(List.class, \"indexes\");\n" );
+            for (int j = 0; j < dTableModel.getOutputSize(); j++) {
+                sb.append( "    private static final UnitData<List> var_output" + j + " = D.unitData(List.class, \"output" + j + "\");\n" );
+            }
+            for (int j = 0; j < dTableModel.getInputSize(); j++) {
+                sb.append( "    private static final UnitData<DataSource> var_input" + j + " = D.unitData(DataSource.class, \"input" + j + "\");\n" );
+                sb.append( "    private static final Variable<Object> var_$pattern$" + j + "$ = D.declarationOf(Object.class, \"$pattern$" + j + "$\", var_input" + j + ");\n" );
+            }
+
             for (int i = 0; i < dTableModel.getRows().size(); i++) {
                 DTableModel.DRowModel row = dTableModel.getRows().get(i);
 
                 sb.append( "\n" );
                 sb.append( "    private static Rule rule_" + clasName + "_" + i + "() {\n" );
-                for (int j = 0; j < dTableModel.getOutputsNr(); j++) {
-                    sb.append( "        UnitData<DataSource> var_output" + j + " = D.unitData(DataSource.class, \"output" + j + "\");\n" );
-                }
-                for (int j = 0; j < dTableModel.getInputs().size(); j++) {
-                    sb.append( "        UnitData<DataSource> var_input" + j + " = D.unitData(DataSource.class, \"input" + j + "\");\n" );
-                    sb.append( "        Variable<Object> var_$pattern$" + j + "$ = D.declarationOf(Object.class, \"$pattern$" + j + "$\", var_input" + j + ");\n" );
-                }
-
-                sb.append( "\n" );
                 sb.append( "        return D.rule(\"" + pkgName + "\", \"" + clasName + "_" + i + "\")\n" );
                 sb.append( "                .unit(" + pkgName + "." + clasName + "DTUnit.class)\n" );
                 sb.append( "                .build( \n" );
 
-                for (int j = 0; j < dTableModel.getInputs().size(); j++) {
+                for (int j = 0; j < dTableModel.getInputSize(); j++) {
                     sb.append( "                       D.pattern(var_$pattern$" + j + "$).expr(TEST_ARRAY[" + i + "][" + j + "].getClass().getSimpleName(),\n" );
                     sb.append( "                           (_this) -> unaryTestsOr( TEST_ARRAY[" + i + "][" + j + "].getUnaryTests() ).apply( null, _this )),\n" );
                 }
 
-                sb.append( "                       D.on( " );
-                sb.append( IntStream.range( 0, dTableModel.getOutputsNr() ).mapToObj( j -> "var_output" + j ).collect( joining(", ") ) );
-                sb.append( " ).execute((" );
-                sb.append( IntStream.range( 0, dTableModel.getOutputsNr() ).mapToObj( j -> "output" + j ).collect( joining(", ") ) );
+                sb.append( "                       D.on( var_indexes, " );
+                sb.append( IntStream.range( 0, dTableModel.getOutputSize() ).mapToObj( j -> "var_output" + j ).collect( joining(", ") ) );
+                sb.append( " ).execute(( indexes, " );
+                sb.append( IntStream.range( 0, dTableModel.getOutputSize() ).mapToObj( j -> "output" + j ).collect( joining(", ") ) );
                 sb.append( " ) -> {\n" );
-                for (int j = 0; j < dTableModel.getOutputsNr(); j++) {
-                    sb.append( "                            output" + j + ".insert(" + row.getOutputs().get(j) + ");\n" );
+                for (int j = 0; j < dTableModel.getOutputSize(); j++) {
+                    sb.append( "                            output" + j + ".add(" + row.getOutputs().get(j) + ");\n" );
                 }
+                sb.append( "                            indexes.add(" + i + ");\n" );
 
                 sb.append( "                       }\n" );
                 sb.append( "        ));\n" );
@@ -222,11 +224,13 @@ public class ExecModelDMNEvaluatorCompiler extends DMNEvaluatorCompilerImpl {
             StringBuilder sb = new StringBuilder();
             sb.append( "package " ).append( pkgName ).append( ";\n" );
             sb.append( "\n" );
+            sb.append( "import java.util.List;\n" );
+            sb.append( "import java.util.ArrayList;\n" );
             sb.append( "import " ).append( DataSource.class.getCanonicalName() ).append( ";\n" );
             sb.append( "\n" );
             sb.append( "public class " ).append( clasName ).append( "DTUnit extends " + DMNUnit.class.getCanonicalName() + " {\n" );
 
-            for (int i = 0; i < dTableModel.getInputs().size(); i++) {
+            for (int i = 0; i < dTableModel.getInputSize(); i++) {
                 sb.append( "\n" );
                 sb.append( "    private DataSource<Object> input" ).append( i ).append( ";\n" );
                 sb.append( "    public DataSource<Object> getInput" ).append( i ).append( "() {\n" );
@@ -234,16 +238,18 @@ public class ExecModelDMNEvaluatorCompiler extends DMNEvaluatorCompilerImpl {
                 sb.append( "    }\n" );
             }
 
-            sb.append( "\n" );
-            sb.append( "    private DataSource<Object> output0 = DataSource.create();\n" );
-            sb.append( "    public DataSource<Object> getOutput0() {\n" );
-            sb.append( "        return output0;\n" );
-            sb.append( "    }\n" );
+            for (int i = 0; i < dTableModel.getOutputSize(); i++) {
+                sb.append( "\n" );
+                sb.append( "    private List<Object> output" + i + " = new ArrayList<Object>();\n" );
+                sb.append( "    public List<Object> getOutput" + i + "() {\n" );
+                sb.append( "        return output" + i + ";\n" );
+                sb.append( "    }\n" );
+            }
 
             sb.append( "\n" );
             sb.append( "    @Override\n" );
             sb.append( "    public void onStart() {\n" );
-            for (int i = 0; i < dTableModel.getInputs().size(); i++) {
+            for (int i = 0; i < dTableModel.getInputSize(); i++) {
                 sb.append( "        input" ).append( i ).append( " = DataSource.create( getValue(" ).append( i ).append( ") );\n" );
             }
             sb.append( "    }\n" );
@@ -251,7 +257,9 @@ public class ExecModelDMNEvaluatorCompiler extends DMNEvaluatorCompilerImpl {
             sb.append( "\n" );
             sb.append( "    @Override\n" );
             sb.append( "    public void onEnd() {\n" );
-            sb.append( "        result = output0.iterator().next();\n" );
+            sb.append( "        result = applyHitPolicy( \n" );
+            sb.append( IntStream.range( 0, dTableModel.getOutputSize() ).mapToObj( i -> "output" + i ).collect( joining(", ") ) );
+            sb.append( ");\n" );
             sb.append( "    }\n" );
             sb.append( "}\n" );
 

@@ -17,37 +17,62 @@
 package temp.kiedmn.compiler;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import org.kie.dmn.api.feel.runtime.events.FEELEvent;
 import org.kie.dmn.core.compiler.DMNCompilerContext;
 import org.kie.dmn.core.impl.BaseDMNTypeImpl;
 import org.kie.dmn.feel.codegen.feel11.CodegenStringUtil;
 import org.kie.dmn.feel.codegen.feel11.CompiledFEELExpression;
 import org.kie.dmn.feel.lang.CompilerContext;
+import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.feel.lang.Type;
+import org.kie.dmn.feel.runtime.UnaryTest;
+import org.kie.dmn.feel.runtime.decisiontables.HitPolicy;
+import org.kie.dmn.feel.runtime.events.InvalidInputEvent;
 import org.kie.dmn.model.v1_1.DecisionRule;
 import org.kie.dmn.model.v1_1.DecisionTable;
 import org.kie.dmn.model.v1_1.InputClause;
 import org.kie.dmn.model.v1_1.LiteralExpression;
+import org.kie.dmn.model.v1_1.OutputClause;
 import org.kie.dmn.model.v1_1.UnaryTests;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
+import static org.kie.dmn.feel.lang.types.BuiltInType.determineTypeFromName;
+import static org.kie.dmn.feel.runtime.decisiontables.HitPolicy.fromString;
 import static temp.kiedmn.compiler.FeelUtil.asFeelExpression;
+import static temp.kiedmn.compiler.FeelUtil.feel;
 
 public class DTableModel {
+    private final DecisionTable dt;
     private final String namespace;
+    private final String dtName;
     private final String tableName;
-    private final List<DColumnModel> inputs;
-    private final int outputsNr;
+    private final HitPolicy hitPolicy;
+
+    private final List<DColumnModel> columns;
     private final List<DRowModel> rows;
+    private final List<DOutputModel> outputs;
+
+    private final org.kie.dmn.feel.runtime.decisiontables.DecisionTable dtable;
 
     public DTableModel(String namespace, String dtName, DecisionTable dt) {
+        this.dt = dt;
+        this.dtName = dtName;
         this.namespace = CodegenStringUtil.escapeIdentifier( namespace );
         this.tableName = CodegenStringUtil.escapeIdentifier( dtName );
-        this.inputs = dt.getInput().stream()
-                .map( InputClause::getInputExpression )
+        this.hitPolicy = fromString(dt.getHitPolicy().value());
+        this.columns = dt.getInput().stream()
                 .map( DColumnModel::new ).collect( toList() );
-        this.outputsNr = dt.getOutput().size();
+        this.outputs = dt.getOutput().stream()
+                .map( DOutputModel::new ).collect( toList() );
         this.rows = dt.getRule().stream().map( DRowModel::new ).collect( toList() );
+
+        this.dtable = new DecisionTableImpl( dtName, outputs );
+        initInputs();
     }
 
     public String getNamespace() {
@@ -58,22 +83,42 @@ public class DTableModel {
         return tableName;
     }
 
-    public List<DColumnModel> getInputs() {
-        return inputs;
+    public String getDtName() {
+        return dtName;
+    }
+
+    public List<DColumnModel> getColumns() {
+        return columns;
+    }
+
+    public List<InputClause> getInputs() {
+        return dt.getInput();
     }
 
     public List<DRowModel> getRows() {
         return rows;
     }
 
-    public int getOutputsNr() {
-        return outputsNr;
+    public int getOutputSize() {
+        return outputs.size();
+    }
+
+    public int getInputSize() {
+        return columns.size();
+    }
+
+    public HitPolicy getHitPolicy() {
+        return hitPolicy;
+    }
+
+    public org.kie.dmn.feel.runtime.decisiontables.DecisionTable asDecisionTable() {
+        return dtable;
     }
 
     public List<CompiledFEELExpression> getFeelExpressionsForInputs( DMNCompilerContext ctx) {
-        CompilerContext feelctx = FeelUtil.feel.newCompilerContext();
+        CompilerContext feelctx = feel.newCompilerContext();
         ctx.getVariables().forEach( (k, v) -> feelctx.addInputVariableType( k, ((BaseDMNTypeImpl ) v).getFeelType() ) );
-        return inputs.stream().map( DColumnModel::getName ).map( n -> asFeelExpression( n, feelctx ) ).collect( toList() );
+        return columns.stream().map( DColumnModel::getName ).map( n -> asFeelExpression( n, feelctx ) ).collect( toList() );
     }
 
     public static class DRowModel {
@@ -100,30 +145,97 @@ public class DTableModel {
     }
 
     public static class DColumnModel {
+        private final InputClause inputClause;
         private final String name;
-        private final String javaName;
-        private final String type;
+        private final Type type;
 
-        DColumnModel (LiteralExpression expr) {
+        private List<UnaryTest> inputTests;
+
+        DColumnModel(InputClause inputClause) {
+            this.inputClause = inputClause;
+            LiteralExpression expr = inputClause.getInputExpression();
             this.name = expr.getText();
-            this.javaName = CodegenStringUtil.escapeIdentifier( name );
-            this.type = expr.getTypeRef() != null ? expr.getTypeRef().getLocalPart() : null;
-        }
-
-        public Class<?> getTypeClass() {
-            if (type != null) {
-                if (type.equalsIgnoreCase( "string" )) {
-                    return String.class;
-                }
-                if (type.equalsIgnoreCase( "boolean" )) {
-                    return Boolean.class;
-                }
-            }
-            return Object.class;
+            this.type = determineTypeFromName( expr.getTypeRef() != null ? expr.getTypeRef().getLocalPart() : null );
         }
 
         public String getName() {
             return name;
+        }
+
+        public Type getType() {
+            return type;
+        }
+
+        public FEELEvent validate( EvaluationContext ctx, Object parameter ) {
+            if (inputTests != null) {
+                boolean satisfies = inputTests.stream().map( ut -> ut.apply( ctx, parameter ) ).filter( Boolean::booleanValue ).findAny().orElse( false );
+                if ( !satisfies ) {
+                    String values = getInputValuesText( inputClause );
+                    return new InvalidInputEvent( FEELEvent.Severity.ERROR,
+                            inputClause.getInputExpression() + "='" + parameter + "' does not match any of the valid values " + values + " for decision table '" + getName() + "'.",
+                            getName(),
+                            null,
+                            values );
+                }
+            }
+            return null;
+        }
+    }
+
+    private void initInputs() {
+        Map<String, Type> variableTypes = columns.stream().collect( toMap( DColumnModel::getName, DColumnModel::getType ) );
+
+        for (DColumnModel column : columns) {
+            String inputValuesText = getInputValuesText( column.inputClause );
+            if (inputValuesText != null) {
+                column.inputTests = feel.evaluateUnaryTests( inputValuesText, variableTypes );
+            }
+        }
+    }
+
+    private static String getInputValuesText( InputClause inputClause ) {
+        return Optional.ofNullable( inputClause.getInputValues() ).map( UnaryTests::getText ).orElse(null);
+    }
+
+    public static class DOutputModel {
+        private final String name;
+
+        DOutputModel( OutputClause outputClause ) {
+            this.name = outputClause.getName();
+        }
+
+        org.kie.dmn.feel.runtime.decisiontables.DecisionTable.OutputClause asOutputClause() {
+            return new org.kie.dmn.feel.runtime.decisiontables.DecisionTable.OutputClause() {
+                @Override
+                public String getName() {
+                    return name;
+                }
+
+                @Override
+                public List<UnaryTest> getOutputValues() {
+                    throw new UnsupportedOperationException( "TODO" );
+                }
+            };
+        }
+    }
+
+    private static class DecisionTableImpl implements org.kie.dmn.feel.runtime.decisiontables.DecisionTable {
+        private final String name;
+        private final List<org.kie.dmn.feel.runtime.decisiontables.DecisionTable.OutputClause> outputs;
+
+        private DecisionTableImpl( String name, List<DOutputModel> outputs ) {
+            this.name = name;
+            this.outputs = outputs.stream().map( DOutputModel::asOutputClause ).collect( toList() );
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public List<? extends OutputClause> getOutputs() {
+            return outputs;
         }
     }
 }

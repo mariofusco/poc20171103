@@ -1,7 +1,10 @@
 package temp.kiedmn;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.kie.api.runtime.rule.RuleUnit;
@@ -9,15 +12,28 @@ import org.kie.api.runtime.rule.RuleUnitExecutor;
 import org.kie.dmn.api.core.DMNDecisionResult;
 import org.kie.dmn.api.core.DMNDecisionResult.DecisionEvaluationStatus;
 import org.kie.dmn.core.impl.DMNDecisionResultImpl;
-import org.kie.dmn.feel.codegen.feel11.CompiledFEELExpression;
 import org.kie.dmn.feel.lang.EvaluationContext;
+import org.kie.dmn.feel.runtime.decisiontables.DecisionTable;
+import org.kie.dmn.feel.runtime.decisiontables.HitPolicy;
+import org.kie.dmn.feel.runtime.decisiontables.Indexed;
+
+import static java.util.stream.Collectors.toList;
 
 public abstract class DMNUnit implements RuleUnit {
 
+    private Object[] inputs;
     private EvaluationContext evalCtx;
-    private List<CompiledFEELExpression> compiledExprs;
+
+    private HitPolicy hitPolicy;
+    private DecisionTable decisionTable;
 
     protected Object result;
+
+    private List<Integer> indexes = new ArrayList<Integer>();
+
+    public List<Integer> getIndexes() {
+        return indexes;
+    }
 
     // TODO
     public Set<String> getRequirements() {
@@ -35,7 +51,12 @@ public abstract class DMNUnit implements RuleUnit {
     }
 
     protected Object getValue( int pos ) {
-        return compiledExprs.get(pos).apply( evalCtx );
+        return inputs[pos];
+    }
+
+    public DMNUnit setInputs( Object[] inputs ) {
+        this.inputs = inputs;
+        return this;
     }
 
     public DMNUnit setEvalCtx( EvaluationContext evalCtx ) {
@@ -43,8 +64,31 @@ public abstract class DMNUnit implements RuleUnit {
         return this;
     }
 
-    public DMNUnit setCompiledExprs( List<CompiledFEELExpression> compiledExprs ) {
-        this.compiledExprs = compiledExprs;
+    public DMNUnit setHitPolicy( HitPolicy hitPolicy ) {
+        this.hitPolicy = hitPolicy;
         return this;
+    }
+
+    public DMNUnit setDecisionTable( DecisionTable decisionTable ) {
+        this.decisionTable = decisionTable;
+        return this;
+    }
+
+    protected Object applyHitPolicy(List<Object>... results) {
+        List<? extends Indexed> matches = indexes.stream().map( i -> (Indexed) () -> i ).collect( toList() );
+        if (results.length == 1) {
+            return hitPolicy.getDti().dti( evalCtx, decisionTable, matches, results[0] );
+        }
+
+        int resultSize = results[0].size();
+        List<Object> resultsAsMap = new ArrayList<>();
+        for (int i = 0; i < resultSize; i++) {
+            Map<String, Object> map = new HashMap<>();
+            for (int j = 0; j < results.length; j++) {
+                map.put( decisionTable.getOutputs().get(j).getName(), results[j].get(i) );
+            }
+            resultsAsMap.add(map);
+        }
+        return hitPolicy.getDti().dti( evalCtx, decisionTable, matches, resultsAsMap );
     }
 }
