@@ -75,6 +75,12 @@ public abstract class DMNUnit implements RuleUnit {
     }
 
     protected Object applyHitPolicy(List<Object>... results) {
+        if (indexes.isEmpty()) {
+            if( hitPolicy.getDefaultValue() != null ) {
+                return hitPolicy.getDefaultValue();
+            }
+        }
+
         List<? extends Indexed> matches = indexes.stream().map( i -> (Indexed) () -> i ).collect( toList() );
         if (results.length == 1) {
             return hitPolicy.getDti().dti( evalCtx, decisionTable, matches, results[0] );

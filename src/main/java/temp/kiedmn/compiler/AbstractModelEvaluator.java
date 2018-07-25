@@ -82,7 +82,6 @@ public abstract class AbstractModelEvaluator implements DMNExpressionEvaluator {
         evalCtx.enterFrame();
 
         try {
-
             Object[] inputs = resolveActualInputs(evalCtx);
 
             for (int i = 0; i < inputs.length; i++) {
@@ -110,6 +109,9 @@ public abstract class AbstractModelEvaluator implements DMNExpressionEvaluator {
             Object result = unit.execute( executor ).getResult();
 
             return new EvaluatorResultImpl( result, EvaluatorResult.ResultType.SUCCESS );
+        } catch (RuntimeException e) {
+            logger.error(e.toString(), e);
+            throw e;
         } finally {
             evalCtx.exitFrame();
             DMNRuntimeEventManagerUtils.fireAfterEvaluateDecisionTable( eventManager, nodeName, dTableModel.getDtName(), dmnResult, null, null); // (r != null ? r.matchedRules : null), (r != null ? r.fired : null) );

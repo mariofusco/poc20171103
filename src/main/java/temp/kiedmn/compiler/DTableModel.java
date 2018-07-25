@@ -16,6 +16,7 @@
 
 package temp.kiedmn.compiler;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -64,15 +65,18 @@ public class DTableModel {
         this.dtName = dtName;
         this.namespace = CodegenStringUtil.escapeIdentifier( namespace );
         this.tableName = CodegenStringUtil.escapeIdentifier( dtName );
-        this.hitPolicy = fromString(dt.getHitPolicy().value());
+        this.hitPolicy = fromString(dt.getHitPolicy().value() + (dt.getAggregation() != null ? " " + dt.getAggregation().value() : ""));
         this.columns = dt.getInput().stream()
                 .map( DColumnModel::new ).collect( toList() );
         this.outputs = dt.getOutput().stream()
                 .map( DOutputModel::new ).collect( toList() );
         this.rows = dt.getRule().stream().map( DRowModel::new ).collect( toList() );
 
+        Map<String, Type> variableTypes = columns.stream().collect( toMap( DColumnModel::getName, DColumnModel::getType ) );
+        initInputs(variableTypes);
+
         this.dtable = new DecisionTableImpl( dtName, outputs );
-        initInputs();
+        initOutputs(variableTypes);
     }
 
     public String getNamespace() {
@@ -127,12 +131,12 @@ public class DTableModel {
         private final List<String> outputs;
 
         DRowModel(DecisionRule dr) {
-            this.inputs = dr.getInputEntry().stream().map( UnaryTests::getText ).collect( toList() );
-            this.outputs = dr.getOutputEntry().stream().map( LiteralExpression::getText ).collect( toList() );
-        }
-
-        public List<CompiledFEELExpression> getOutputsAsFeelExpressions() {
-            return outputs.stream().map( FeelUtil::asFeelExpression ).collect( toList() );
+            this.inputs = dr.getInputEntry().stream()
+                    .map( UnaryTests::getText ).collect( toList() );
+            this.outputs = dr.getOutputEntry().stream()
+                    .map( LiteralExpression::getText )
+                    .map( feel::evaluate )
+                    .map( DTableModel::feelValueToString ).collect( toList() );
         }
 
         public List<String> getInputs() {
@@ -142,6 +146,16 @@ public class DTableModel {
         public List<String> getOutputs() {
             return outputs;
         }
+    }
+
+    public static String feelValueToString(Object value) {
+        if (value instanceof BigDecimal) {
+            return "new java.math.BigDecimal( \"" + value.toString() + "\" )";
+        }
+        if (value instanceof String) {
+            return "\"" + value.toString() + "\"";
+        }
+        return value.toString();
     }
 
     public static class DColumnModel {
@@ -182,9 +196,7 @@ public class DTableModel {
         }
     }
 
-    private void initInputs() {
-        Map<String, Type> variableTypes = columns.stream().collect( toMap( DColumnModel::getName, DColumnModel::getType ) );
-
+    private void initInputs(Map<String, Type> variableTypes) {
         for (DColumnModel column : columns) {
             String inputValuesText = getInputValuesText( column.inputClause );
             if (inputValuesText != null) {
@@ -193,27 +205,41 @@ public class DTableModel {
         }
     }
 
+    private void initOutputs(Map<String, Type> variableTypes) {
+        for (DOutputModel output : outputs) {
+            String outputValuesText = getOutputValuesText( output.outputClause );
+            if (outputValuesText != null) {
+                output.outputValues = feel.evaluateUnaryTests( outputValuesText, variableTypes );
+            }
+        }
+    }
+
     private static String getInputValuesText( InputClause inputClause ) {
         return Optional.ofNullable( inputClause.getInputValues() ).map( UnaryTests::getText ).orElse(null);
     }
 
+    private static String getOutputValuesText( OutputClause outputClause ) {
+        return  Optional.ofNullable( outputClause.getOutputValues() ).map( UnaryTests::getText ).orElse( null );
+    }
+
     public static class DOutputModel {
-        private final String name;
+        private final OutputClause outputClause;
+        private List<UnaryTest> outputValues;
 
         DOutputModel( OutputClause outputClause ) {
-            this.name = outputClause.getName();
+            this.outputClause = outputClause;
         }
 
         org.kie.dmn.feel.runtime.decisiontables.DecisionTable.OutputClause asOutputClause() {
             return new org.kie.dmn.feel.runtime.decisiontables.DecisionTable.OutputClause() {
                 @Override
                 public String getName() {
-                    return name;
+                    return outputClause.getName();
                 }
 
                 @Override
                 public List<UnaryTest> getOutputValues() {
-                    throw new UnsupportedOperationException( "TODO" );
+                    return outputValues;
                 }
             };
         }
